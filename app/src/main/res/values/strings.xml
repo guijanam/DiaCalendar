@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">DiaCalendar</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="text_calendar">캘린더</string>
+    <string name="text_worklist">근무표</string>
+    <string name="text_analysis">분석보고서</string>
+    <string name="text_settings">설정</string>
+</resources>

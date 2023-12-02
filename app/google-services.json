@@ -1,0 +1,83 @@
+{
+  "project_info": {
+    "project_number": "279893981981",
+    "firebase_url": "https://todaydia-63da5-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "todaydia-63da5",
+    "storage_bucket": "todaydia-63da5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:279893981981:android:98535e6f0da81f199e7ff4",
+        "android_client_info": {
+          "package_name": "com.example.diacal_android"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "279893981981-dskhaejf9tfn4gpgsklskovhdbp2hi3h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB-sJQHuS69zW1URflaMiRR4_dH2xBLS6o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "279893981981-dskhaejf9tfn4gpgsklskovhdbp2hi3h.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "279893981981-atr679gband9j798r0694efjeajsq9sd.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.sonbum.diacal"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:279893981981:android:eb215b4beb12d5d69e7ff4",
+        "android_client_info": {
+          "package_name": "com.example.diacalendar"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "279893981981-dskhaejf9tfn4gpgsklskovhdbp2hi3h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB-sJQHuS69zW1URflaMiRR4_dH2xBLS6o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "279893981981-dskhaejf9tfn4gpgsklskovhdbp2hi3h.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "279893981981-atr679gband9j798r0694efjeajsq9sd.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.sonbum.diacal"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
