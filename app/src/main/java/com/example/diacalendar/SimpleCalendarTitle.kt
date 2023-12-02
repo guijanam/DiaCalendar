@@ -35,7 +35,7 @@ fun SimpleCalendarTitle(
     goToNext: () -> Unit,
 ) {
     Row(
-        modifier = modifier.height(40.dp),
+        modifier = modifier.height(30.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         CalendarNavigationIcon(
@@ -48,7 +48,7 @@ fun SimpleCalendarTitle(
                 .weight(1f)
                 .testTag("MonthTitle"),
             text = currentMonth.displayText(),
-            fontSize = 22.sp,
+            fontSize = 20.sp,
             textAlign = TextAlign.Center,
             fontWeight = FontWeight.Medium,
         )

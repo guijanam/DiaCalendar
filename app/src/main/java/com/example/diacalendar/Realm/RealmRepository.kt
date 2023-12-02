@@ -1,5 +1,7 @@
-package com.example.diacal_android.Realm
+package com.example.diacalendar.Realm
 
+import com.example.diacalendar.Realm.DiaItemEntity
+import com.example.diacalendar.Realm.DiaTableEntity
 import io.realm.kotlin.Realm
 import io.realm.kotlin.RealmConfiguration
 

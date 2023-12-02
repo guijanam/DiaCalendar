@@ -1,4 +1,4 @@
-package com.example.diacal_android.Firebase
+package com.example.diacalendar.Firebase
 
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.DocumentSnapshot

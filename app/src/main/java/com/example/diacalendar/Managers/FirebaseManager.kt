@@ -1,8 +1,8 @@
-package com.example.diacal_android.Managers
+package com.example.diacalendar.Managers
 
 import android.util.Log
-import com.example.diacal_android.Firebase.Company
-import com.example.diacal_android.Firebase.CompanyListItem
+import com.example.diacalendar.Firebase.Company
+import com.example.diacalendar.Firebase.CompanyListItem
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 

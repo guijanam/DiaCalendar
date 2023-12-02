@@ -1,9 +1,16 @@
 package com.example.diacalendar
 
+import android.graphics.Bitmap
 import android.os.Bundle
+import android.view.ViewGroup
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
@@ -28,22 +35,23 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -126,7 +134,7 @@ fun BottomNavigation(navController: NavHostController) {
                     )
                 },
                 label = {
-                    androidx.compose.material.Text(
+                    Text(
                         stringResource(id = item.title),
                         fontSize = 9.sp
                     )
@@ -190,7 +198,7 @@ fun CalendarScreen(horizontal: Boolean = true) {
         modifier = Modifier
             .fillMaxSize()
             .background(colorResource(id = R.color.red_800))//상단 년도 배경색
-            .padding(top = 5.dp),
+            .padding(top = 2.dp),
     ) {
         val state = rememberCalendarState(
             startMonth = startMonth,
@@ -204,7 +212,7 @@ fun CalendarScreen(horizontal: Boolean = true) {
         // Draw light content on dark background.
         CompositionLocalProvider(LocalContentColor provides darkColors().onSurface) {
             SimpleCalendarTitle(
-                modifier = Modifier.padding(vertical = 10.dp, horizontal = 8.dp),
+                modifier = Modifier.padding(all = 1.dp),
                 currentMonth = visibleMonth.yearMonth,
                 goToPrevious = {
                     coroutineScope.launch {
@@ -220,7 +228,7 @@ fun CalendarScreen(horizontal: Boolean = true) {
             FullScreenCalendar(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(colorResource(id = R.color.blue_grey_700))//달력 배경색
+                    .background(colorResource(id = R.color.white))//달력 배경색
                     .testTag("Calendar"),
                 state = state,
                 horizontal = horizontal,
@@ -250,11 +258,11 @@ fun CalendarScreen(horizontal: Boolean = true) {
                 monthHeader = {
                     MonthHeader(daysOfWeek = daysOfWeek)
                 },
-                monthFooter = { month ->
-                    val count = month.weekDays.flatten()
-                        .count { selections.contains(it) }
-                    MonthFooter(selectionCount = count)
-                },
+//                monthFooter = { month ->
+//                    val count = month.weekDays.flatten()
+//                        .count { selections.contains(it) }
+//                    MonthFooter(selectionCount = count)
+//                },
             )
         }
     }
@@ -265,10 +273,9 @@ private fun FullScreenCalendar(
     modifier: Modifier,
     state: CalendarState,
     horizontal: Boolean,
-    dayContent: @Composable BoxScope.(CalendarDay) -> Unit,
-    monthHeader: @Composable ColumnScope.(CalendarMonth) -> Unit,
-    monthBody: @Composable ColumnScope.(CalendarMonth, content: @Composable () -> Unit) -> Unit,
-    monthFooter: @Composable ColumnScope.(CalendarMonth) -> Unit,
+    dayContent: @Composable() (BoxScope.(CalendarDay) -> Unit),
+    monthHeader: @Composable() (ColumnScope.(CalendarMonth) -> Unit),
+    monthBody: @Composable() (ColumnScope.(CalendarMonth, content: @Composable () -> Unit) -> Unit),
 ) {
     if (horizontal) {
         HorizontalCalendar(
@@ -279,7 +286,7 @@ private fun FullScreenCalendar(
             dayContent = dayContent,
             monthBody = monthBody,
             monthHeader = monthHeader,
-            monthFooter = monthFooter,
+//            monthFooter = monthFooter,
         )
     } else {
         VerticalCalendar(
@@ -290,7 +297,7 @@ private fun FullScreenCalendar(
             dayContent = dayContent,
             monthBody = monthBody,
             monthHeader = monthHeader,
-            monthFooter = monthFooter,
+//            monthFooter = monthFooter,
         )
     }
 }
@@ -302,13 +309,13 @@ private fun MonthHeader(daysOfWeek: List<DayOfWeek>) {
             .fillMaxWidth()
             .testTag("MonthHeader")
             .background(colorResource(id = R.color.example_1_bg_secondary))
-            .padding(vertical = 8.dp),
+            .padding(all = 1.dp),
     ) {
         for (dayOfWeek in daysOfWeek) {
             Text(
                 modifier = Modifier.weight(1f),
                 textAlign = TextAlign.Center,
-                fontSize = 15.sp,
+                fontSize = 12.sp,
                 text = dayOfWeek.displayText(),
             )
         }
@@ -316,29 +323,30 @@ private fun MonthHeader(daysOfWeek: List<DayOfWeek>) {
 }
 //
 
-@Composable
-private fun MonthFooter(selectionCount: Int) {
-    Box(
-        Modifier
-            .fillMaxWidth()
-            .testTag("MonthFooter")
-            .background(colorResource(id = R.color.orange_800))
-            .padding(vertical = 10.dp),
-        contentAlignment = Alignment.Center,
-    ) {
-        val text = if (selectionCount == 0) {
-            stringResource(R.string.example_8_zero_selection)
-        } else {
-            pluralStringResource(R.plurals.example_8_selection, selectionCount, selectionCount)
-        }
-        Text(text = text)
-    }
-}
+//@Composable
+//private fun MonthFooter(selectionCount: Int) {
+//    Box(
+//        Modifier
+//            .fillMaxWidth()
+//            .testTag("MonthFooter")
+//            .background(colorResource(id = R.color.orange_800))
+//            .padding(vertical = 10.dp),
+//        contentAlignment = Alignment.Center,
+//    ) {
+//        val text = if (selectionCount == 0) {
+//            stringResource(R.string.example_8_zero_selection)
+//        } else {
+//            pluralStringResource(R.plurals.example_8_selection, selectionCount, selectionCount)
+//        }
+//        Text(text = text)
+//    }
+//}
 
 @Composable
 private fun Day(
     day: CalendarDay,
     isSelected: Boolean,
+    colors: List<Color> = emptyList(),
     isToday: Boolean,
     onClick: (CalendarDay) -> Unit,
 ) {
@@ -346,11 +354,16 @@ private fun Day(
         Modifier
             .fillMaxWidth()
             .fillMaxHeight()
-            .clip(RectangleShape)
+            .border(
+                width = 0.1.dp,
+                color = Color.LightGray,
+                shape = RectangleShape
+            )
+            .padding(all = 0.dp)
             .background(
                 color = when {
                     isSelected -> colorResource(R.color.example_1_selection_color)
-                    isToday -> colorResource(id = R.color.example_1_white_light)
+                    isToday -> colorResource(id = R.color.example_5_text_grey_light)
                     else -> Color.Transparent
                 },
             )
@@ -364,15 +377,53 @@ private fun Day(
     ) {
         val textColor = when (day.position) {
             // Color.Unspecified will use the default text color from the current theme
-            DayPosition.MonthDate -> if (isSelected) colorResource(R.color.example_1_bg) else Color.Unspecified
-            DayPosition.InDate, DayPosition.OutDate -> colorResource(R.color.example_1_white_light)
+            DayPosition.MonthDate -> if (isSelected) colorResource(R.color.white) else colorResource(R.color.black)
+            DayPosition.InDate, DayPosition.OutDate -> colorResource(R.color.example_5_text_grey_light)
         }
         Text(
             text = day.date.dayOfMonth.toString(),
             color = textColor,
-            fontSize = 15.sp,
+            fontSize = 12.sp,
         )
+        Column(
+            Modifier
+                .align(Alignment.Center)
+                .fillMaxWidth()
+                .padding(bottom = 8.dp),
+            verticalArrangement = Arrangement.Center,
+        ) {
+            for (color in colors) {
+                Box(
+                    Modifier
+                        .fillMaxWidth()
+                        .height(5.dp)
+                        .background(color),
+                )
+            }
+
+            DiaView()
+            MemoView()
+        }
     }
+}
+
+@Composable
+fun DiaView(
+
+) {
+
+    androidx.compose.material3.Text(
+        text = "Dia",
+        color = Color.Blue,
+    )
+}
+
+@Composable
+fun MemoView() {
+    androidx.compose.material3.Text(
+        text = "Memo",
+        color = Color.Green,
+    )
 }
 
 @Composable
@@ -382,7 +433,7 @@ fun WorkListScreen() {
             .fillMaxSize()
             .background(androidx.compose.material.MaterialTheme.colors.primaryVariant)
     ) {
-        androidx.compose.material.Text(
+        Text(
             text = stringResource(id = R.string.text_worklist),
             style = androidx.compose.material.MaterialTheme.typography.h1,
             textAlign = TextAlign.Center,
@@ -394,19 +445,35 @@ fun WorkListScreen() {
 
 @Composable
 fun AnalysisScreen() {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(androidx.compose.material.MaterialTheme.colors.secondary)
-    ) {
-        androidx.compose.material.Text(
-            text = stringResource(id = R.string.text_analysis),
-            style = androidx.compose.material.MaterialTheme.typography.h1,
-            textAlign = TextAlign.Center,
-            color = Color.White,
-            modifier = Modifier.align(Alignment.Center)
-        )
+    var backEnable by remember { mutableStateOf(false) }
+    var webView : WebView? = null
+
+    AndroidView(
+        modifier = Modifier,
+        factory = {context ->
+            WebView(context).apply {
+                layoutParams = ViewGroup.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                )
+                webViewClient = object : WebViewClient() {
+                    override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
+                        backEnable = view!!.canGoBack()
+                    }
+                }
+                settings.javaScriptEnabled = true
+                loadUrl("https://roaring-daifuku-d5d674.netlify.app/")
+                webView = this
+            }
+        }, update = {
+            webView = it
+        })
+    BackHandler(enabled = backEnable) {
+        webView?.goBack()
     }
+
+
+
 }
 
 @Composable
@@ -416,7 +483,7 @@ fun SettingsScreen() {
             .fillMaxSize()
             .background(androidx.compose.material.MaterialTheme.colors.secondaryVariant)
     ) {
-        androidx.compose.material.Text(
+        Text(
             text = stringResource(id = R.string.text_settings),
             style = androidx.compose.material.MaterialTheme.typography.h1,
             textAlign = TextAlign.Center,

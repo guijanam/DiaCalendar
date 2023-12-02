@@ -12,17 +12,17 @@ import java.time.format.TextStyle
 import java.util.*
 
 fun YearMonth.displayText(short: Boolean = false): String {
-    return "${this.month.displayText(short = short)} ${this.year}"
+    return "${this.year}.${this.month.displayText(short = short)}"
 }
 
 fun Month.displayText(short: Boolean = true): String {
     val style = if (short) TextStyle.SHORT else TextStyle.FULL
-    return getDisplayName(style, Locale.ENGLISH)
+    return getDisplayName(style, Locale.KOREAN)
 }
 
 fun DayOfWeek.displayText(uppercase: Boolean = false): String {
-    return getDisplayName(TextStyle.SHORT, Locale.ENGLISH).let { value ->
-        if (uppercase) value.uppercase(Locale.ENGLISH) else value
+    return getDisplayName(TextStyle.SHORT, Locale.KOREAN).let { value ->
+        if (uppercase) value.uppercase(Locale.KOREAN) else value
     }
 }
 

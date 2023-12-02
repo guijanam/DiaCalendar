@@ -1,4 +1,4 @@
-package com.example.diacal_android.Managers
+package com.example.diacalendar.Managers
 
 class RealmManager {
 }

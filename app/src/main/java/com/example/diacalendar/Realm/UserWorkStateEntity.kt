@@ -1,4 +1,4 @@
-package com.example.diacal_android.Realm
+package com.example.diacalendar.Realm
 
 class UserWorkStateEntity {
 }

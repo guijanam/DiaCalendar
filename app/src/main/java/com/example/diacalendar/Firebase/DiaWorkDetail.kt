@@ -1,4 +1,4 @@
-package com.example.diacal_android.Firebase
+package com.example.diacalendar.Firebase
 
 import androidx.collection.emptyIntObjectMap
 
