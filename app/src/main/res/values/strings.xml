@@ -5,4 +5,38 @@
     <string name="text_worklist">근무표</string>
     <string name="text_analysis">분석보고서</string>
     <string name="text_settings">설정</string>
+
+    <string name="activity_title_view">Calendar View Sample</string>
+    <string name="example_1_title">Example 1</string>
+    <string name="example_1_subtitle">Multiple selection, paged horizontal scrolling, shows the \"EndOfRow\" implementation of OutDateStyle property.</string>
+    <string name="example_2_title">Example 2</string>
+    <string name="example_2_subtitle">Month header view, single selection, vertical scrolling, hides in and out dates.</string>
+    <string name="example_3_title">Example 3</string>
+    <string name="example_3_subtitle">Event style implementation, day labels as header view, single selection, month scroll listener. Similar to what is in the Google Calendar app.</string>
+    <string name="example_4_title">Example 4</string>
+    <string name="example_4_subtitle">Continuous selection within one month and across multiple months, dates older than the current day are disabled. Similar to what is in the Airbnb app.</string>
+    <string name="example_5_title">Example 5</string>
+    <string name="example_5_subtitle">Single selection, programmatic calendar scrolling, generates six rows for all months showing \"EndOfGrid\" implementation of OutDateStyle property. A flight schedule calendar.</string>
+    <string name="example_6_title">Example 6</string>
+    <string name="example_6_subtitle">Custom date width and height, custom month view, item decoration on the CalendarView, continuous horizontal scrolling style.</string>
+    <string name="example_7_title">Example 7</string>
+    <string name="example_7_subtitle">Week calendar with single selection, paged scroll and visible item observation.</string>
+    <string name="example_8_title">Example 8</string>
+    <string name="example_8_subtitle">Fullscreen calendar, header and footer views, paged horizontal scrolling, shows the \"Rectangle\" DaySize option.</string>
+    <string name="save">Save</string>
+    <string name="close">Close</string>
+    <string name="example_3_input_dialog_title">Enter event title</string>
+    <string name="example_3_empty_input_text">Text is empty</string>
+    <string name="example_3_dialog_delete_confirmation">Delete this event?</string>
+    <string name="delete">Delete</string>
+    <string name="start_date">Start date</string>
+    <string name="end_date">End date</string>
+    <string name="clear">Clear</string>
+    <string name="week_mode">Week mode</string>
+    <string name="example_8_zero_selection">No selections in this month</string>
+    <plurals name="example_8_selection">
+        <item quantity="zero">@string/example_8_zero_selection</item>
+        <item quantity="one">%1$d selection in this month</item>
+        <item quantity="other">%1$d selections in this month</item>
+    </plurals>
 </resources>
