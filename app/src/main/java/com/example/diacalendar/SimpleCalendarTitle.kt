@@ -3,11 +3,13 @@ package com.example.diacalendar
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
@@ -31,31 +33,52 @@ import java.time.YearMonth
 fun SimpleCalendarTitle(
     modifier: Modifier,
     currentMonth: YearMonth,
-    goToPrevious: () -> Unit,
-    goToNext: () -> Unit,
+    goToDay: () -> Unit,
+    goSetting: () -> Unit,
 ) {
     Row(
-        modifier = modifier.height(30.dp),
+        modifier = modifier.height(34.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         CalendarNavigationIcon(
-            icon = painterResource(id = R.drawable.ic_chevron_left),
-            contentDescription = "Previous",
-            onClick = goToPrevious,
+            icon = painterResource(id = R.drawable.baseline_settings_backup_restore_24),
+            contentDescription = "GoToday",
+            onClick = goToDay,
         )
+        Spacer(modifier = Modifier.width(4.dp))
         Text(
             modifier = Modifier
                 .weight(1f)
                 .testTag("MonthTitle"),
             text = currentMonth.displayText(),
             fontSize = 20.sp,
-            textAlign = TextAlign.Center,
+            textAlign = TextAlign.Start,
+            fontWeight = FontWeight.Medium,
+        )
+        Spacer(modifier = Modifier.width(15.dp))
+        Text(
+            modifier = Modifier
+                .weight(1f)
+                .testTag("MonthTitle"),
+            text = "휴일근무",
+            fontSize = 20.sp,
+            textAlign = TextAlign.Start,
+            fontWeight = FontWeight.Medium,
+        )
+        Spacer(modifier = Modifier.width(4.dp))
+        Text(
+            modifier = Modifier
+                .weight(1f)
+                .testTag("MonthTitle"),
+            text = "휴무",
+            fontSize = 20.sp,
+            textAlign = TextAlign.Start,
             fontWeight = FontWeight.Medium,
         )
         CalendarNavigationIcon(
-            icon = painterResource(id = R.drawable.ic_chevron_right),
-            contentDescription = "Next",
-            onClick = goToNext,
+            icon = painterResource(id = R.drawable.twotone_settings_24),
+            contentDescription = "Setting",
+            onClick = goSetting,
         )
     }
 }

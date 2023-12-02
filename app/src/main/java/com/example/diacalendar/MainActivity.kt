@@ -25,6 +25,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
 import androidx.compose.material.LocalContentColor
+import androidx.compose.material.ModalBottomSheetDefaults
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.darkColors
@@ -52,6 +53,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.navigation.NavDeepLinkRequest
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -214,14 +216,14 @@ fun CalendarScreen(horizontal: Boolean = true) {
             SimpleCalendarTitle(
                 modifier = Modifier.padding(all = 1.dp),
                 currentMonth = visibleMonth.yearMonth,
-                goToPrevious = {
+                goToDay = {
                     coroutineScope.launch {
-                        state.animateScrollToMonth(state.firstVisibleMonth.yearMonth.previousMonth)
+                        state.animateScrollToMonth(currentMonth)
                     }
                 },
-                goToNext = {
+                goSetting = {
                     coroutineScope.launch {
-                        state.animateScrollToMonth(state.firstVisibleMonth.yearMonth.nextMonth)
+                        //state.animateScrollToMonth(state.firstVisibleMonth.yearMonth.nextMonth)
                     }
                 },
             )
@@ -268,6 +270,7 @@ fun CalendarScreen(horizontal: Boolean = true) {
     }
 }
 
+
 @Composable
 private fun FullScreenCalendar(
     modifier: Modifier,
@@ -302,6 +305,7 @@ private fun FullScreenCalendar(
     }
 }
 
+//요일 표시
 @Composable
 private fun MonthHeader(daysOfWeek: List<DayOfWeek>) {
     Row(
@@ -315,7 +319,7 @@ private fun MonthHeader(daysOfWeek: List<DayOfWeek>) {
             Text(
                 modifier = Modifier.weight(1f),
                 textAlign = TextAlign.Center,
-                fontSize = 12.sp,
+                fontSize = 14.sp,
                 text = dayOfWeek.displayText(),
             )
         }
@@ -323,25 +327,7 @@ private fun MonthHeader(daysOfWeek: List<DayOfWeek>) {
 }
 //
 
-//@Composable
-//private fun MonthFooter(selectionCount: Int) {
-//    Box(
-//        Modifier
-//            .fillMaxWidth()
-//            .testTag("MonthFooter")
-//            .background(colorResource(id = R.color.orange_800))
-//            .padding(vertical = 10.dp),
-//        contentAlignment = Alignment.Center,
-//    ) {
-//        val text = if (selectionCount == 0) {
-//            stringResource(R.string.example_8_zero_selection)
-//        } else {
-//            pluralStringResource(R.plurals.example_8_selection, selectionCount, selectionCount)
-//        }
-//        Text(text = text)
-//    }
-//}
-
+//달력 셀,날짜
 @Composable
 private fun Day(
     day: CalendarDay,
@@ -355,7 +341,7 @@ private fun Day(
             .fillMaxWidth()
             .fillMaxHeight()
             .border(
-                width = 0.1.dp,
+                width = 0.2.dp,
                 color = Color.LightGray,
                 shape = RectangleShape
             )
@@ -496,7 +482,7 @@ fun SettingsScreen() {
 
 @Preview(showBackground = true)
 @Composable
-fun GreetingPreview() {
+fun MainScreenPreview() {
     DiaCalendarTheme {
         MainScreenView()
     }
