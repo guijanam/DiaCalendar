@@ -9,42 +9,32 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
+
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
+
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.BottomNavigationItem
-import androidx.compose.material.DrawerState
+
 import androidx.compose.material.Icon
 import androidx.compose.material.LocalContentColor
-import androidx.compose.material.ModalBottomSheetDefaults
-import androidx.compose.material.ModalDrawer
+
 
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.darkColors
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.rememberDrawerState
 
 
-import androidx.compose.material3.Button
 
-import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.DrawerValue.*
-import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalDrawerSheet
-import androidx.compose.material3.ModalNavigationDrawer
+
 import androidx.compose.material3.Surface
 
 
@@ -258,6 +248,7 @@ fun CalendarScreen(horizontal: Boolean = true) {
                         isSelected = selections.contains(day),
                         isToday = day.position == DayPosition.MonthDate && day.date == today,
                     ) { clicked ->
+                        // 다중선택
                         if (selections.contains(clicked)) {
                             selections.remove(clicked)
                         } else {
@@ -278,11 +269,7 @@ fun CalendarScreen(horizontal: Boolean = true) {
                 monthHeader = {
                     MonthHeader(daysOfWeek = daysOfWeek)
                 },
-//                monthFooter = { month ->
-//                    val count = month.weekDays.flatten()
-//                        .count { selections.contains(it) }
-//                    MonthFooter(selectionCount = count)
-//                },
+
             )
         }
     }
@@ -306,7 +293,7 @@ private fun FullScreenCalendar(
             dayContent = dayContent,
             monthBody = monthBody,
             monthHeader = monthHeader,
-//            monthFooter = monthFooter,
+
         )
     } else {
         VerticalCalendar(
@@ -317,7 +304,7 @@ private fun FullScreenCalendar(
             dayContent = dayContent,
             monthBody = monthBody,
             monthHeader = monthHeader,
-//            monthFooter = monthFooter,
+
         )
     }
 }
