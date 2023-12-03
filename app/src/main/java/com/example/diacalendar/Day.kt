@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kizitonwose.calendar.core.CalendarDay
 import com.kizitonwose.calendar.core.DayPosition
+import com.kizitonwose.calendar.core.daysOfWeek
 
 @Composable
 fun Day(
@@ -58,6 +59,8 @@ fun Day(
             // Color.Unspecified will use the default text color from the current theme
             DayPosition.MonthDate -> if (isSelected) colorResource(R.color.white) else colorResource(R.color.black)
             DayPosition.InDate, DayPosition.OutDate -> colorResource(R.color.example_5_text_grey_light)
+
+
         }
         Text(
             text = day.date.dayOfMonth.toString(),

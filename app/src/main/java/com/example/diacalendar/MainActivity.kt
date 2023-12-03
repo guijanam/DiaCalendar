@@ -30,7 +30,13 @@ import androidx.compose.material.LocalContentColor
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.darkColors
-
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material.icons.outlined.Settings
 
 
 import androidx.compose.material3.MaterialTheme
@@ -51,6 +57,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -66,6 +73,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.diacalendar.Screens.AnalysisScreen
+import com.example.diacalendar.Screens.CalendarScreen
+import com.example.diacalendar.Screens.SettingsScreen
+import com.example.diacalendar.Screens.WorkListScreen
 import com.example.diacalendar.ui.theme.DiaCalendarTheme
 import com.kizitonwose.calendar.compose.CalendarState
 import com.kizitonwose.calendar.compose.ContentHeightMode
@@ -92,6 +103,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             DiaCalendarTheme {
                 // A surface container using the 'background' color from the theme
+
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
@@ -192,214 +204,6 @@ fun NavigationGraph(navController: NavHostController) {
         }
     }
 }
-
-
-@Composable
-fun CalendarScreen(horizontal: Boolean = true) {
-    val today = remember { LocalDate.now() }
-    val currentMonth = remember(today) { today.yearMonth }
-    val startMonth = remember { currentMonth.minusMonths(500) }
-    val endMonth = remember { currentMonth.plusMonths(500) }
-    val selections = remember { mutableStateListOf<CalendarDay>() }
-    val daysOfWeek = remember { daysOfWeek() }
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(colorResource(id = R.color.red_800))//상단 년도 배경색
-            .padding(top = 2.dp),
-    ) {
-        val state = rememberCalendarState(
-            startMonth = startMonth,
-            endMonth = endMonth,
-            firstVisibleMonth = currentMonth,
-            firstDayOfWeek = daysOfWeek.first(),
-            outDateStyle = OutDateStyle.EndOfGrid,
-        )
-        val coroutineScope = rememberCoroutineScope()
-        val visibleMonth = rememberFirstVisibleMonthAfterScroll(state)
-        // Draw light content on dark background.
-        CompositionLocalProvider(LocalContentColor provides darkColors().onSurface) {
-            SimpleCalendarTitle(
-                modifier = Modifier.padding(all = 1.dp),
-                currentMonth = visibleMonth.yearMonth,
-                goToDay = {
-                    coroutineScope.launch {
-                        state.animateScrollToMonth(currentMonth)
-                    }
-                },
-                goSetting = {
-                    coroutineScope.launch {
-//                        state.animateScrollToMonth(state.firstVisibleMonth.yearMonth.nextMonth)
-
-                    }
-                },
-            )
-            FullScreenCalendar(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(colorResource(id = R.color.white))//달력 배경색
-                    .testTag("Calendar"),
-                state = state,
-                horizontal = horizontal,
-                dayContent = { day ->
-                    Day(
-                        day = day,
-                        isSelected = selections.contains(day),
-                        isToday = day.position == DayPosition.MonthDate && day.date == today,
-                    ) { clicked ->
-                        // 다중선택
-                        if (selections.contains(clicked)) {
-                            selections.remove(clicked)
-                        } else {
-                            selections.add(clicked)
-                        }
-                    }
-                },
-                // The month body is only needed for ui test tag.
-                monthBody = { _, content ->
-                    Box(
-                        modifier = Modifier
-                            .weight(1f)
-                            .testTag("MonthBody"),
-                    ) {
-                        content()
-                    }
-                },
-                monthHeader = {
-                    MonthHeader(daysOfWeek = daysOfWeek)
-                },
-
-            )
-        }
-    }
-}
-
-@Composable
-private fun FullScreenCalendar(
-    modifier: Modifier,
-    state: CalendarState,
-    horizontal: Boolean,
-    dayContent: @Composable() (BoxScope.(CalendarDay) -> Unit),
-    monthHeader: @Composable() (ColumnScope.(CalendarMonth) -> Unit),
-    monthBody: @Composable() (ColumnScope.(CalendarMonth, content: @Composable () -> Unit) -> Unit),
-) {
-    if (horizontal) {
-        HorizontalCalendar(
-            modifier = modifier,
-            state = state,
-            calendarScrollPaged = true,
-            contentHeightMode = ContentHeightMode.Fill,
-            dayContent = dayContent,
-            monthBody = monthBody,
-            monthHeader = monthHeader,
-
-        )
-    } else {
-        VerticalCalendar(
-            modifier = modifier,
-            state = state,
-            calendarScrollPaged = true,
-            contentHeightMode = ContentHeightMode.Fill,
-            dayContent = dayContent,
-            monthBody = monthBody,
-            monthHeader = monthHeader,
-
-        )
-    }
-}
-
-//요일 표시
-@Composable
-private fun MonthHeader(daysOfWeek: List<DayOfWeek>) {
-    Row(
-        Modifier
-            .fillMaxWidth()
-            .testTag("MonthHeader")
-            .background(colorResource(id = R.color.example_1_bg_secondary))
-            .padding(all = 1.dp),
-    ) {
-        for (dayOfWeek in daysOfWeek) {
-            Text(
-                modifier = Modifier.weight(1f),
-                textAlign = TextAlign.Center,
-                fontSize = 14.sp,
-                text = dayOfWeek.displayText(),
-            )
-        }
-    }
-}
-//
-
-//달력 셀,날짜
-
-@Composable
-fun WorkListScreen() {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(androidx.compose.material.MaterialTheme.colors.primaryVariant)
-    ) {
-        Text(
-            text = stringResource(id = R.string.text_worklist),
-            style = androidx.compose.material.MaterialTheme.typography.h1,
-            textAlign = TextAlign.Center,
-            color = Color.White,
-            modifier = Modifier.align(Alignment.Center)
-        )
-    }
-}
-
-@Composable
-fun AnalysisScreen() {
-    var backEnable by remember { mutableStateOf(false) }
-    var webView : WebView? = null
-
-    AndroidView(
-        modifier = Modifier,
-        factory = {context ->
-            WebView(context).apply {
-                layoutParams = ViewGroup.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                )
-                webViewClient = object : WebViewClient() {
-                    override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
-                        backEnable = view!!.canGoBack()
-                    }
-                }
-                settings.javaScriptEnabled = true
-                loadUrl("https://roaring-daifuku-d5d674.netlify.app/")
-                webView = this
-            }
-        }, update = {
-            webView = it
-        })
-    BackHandler(enabled = backEnable) {
-        webView?.goBack()
-    }
-
-
-
-}
-
-@Composable
-fun SettingsScreen() {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(androidx.compose.material.MaterialTheme.colors.secondaryVariant)
-    ) {
-        Text(
-            text = stringResource(id = R.string.text_settings),
-            style = androidx.compose.material.MaterialTheme.typography.h1,
-            textAlign = TextAlign.Center,
-            color = Color.White,
-            modifier = Modifier.align(Alignment.Center)
-        )
-    }
-}
-
 
 @Preview(showBackground = true)
 @Composable
