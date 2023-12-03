@@ -23,14 +23,31 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.BottomNavigationItem
+import androidx.compose.material.DrawerState
 import androidx.compose.material.Icon
 import androidx.compose.material.LocalContentColor
 import androidx.compose.material.ModalBottomSheetDefaults
+import androidx.compose.material.ModalDrawer
+
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.darkColors
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.rememberDrawerState
+
+
+import androidx.compose.material3.Button
+
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.DrawerValue.*
+import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalDrawerSheet
+import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Surface
+
+
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -223,7 +240,8 @@ fun CalendarScreen(horizontal: Boolean = true) {
                 },
                 goSetting = {
                     coroutineScope.launch {
-                        //state.animateScrollToMonth(state.firstVisibleMonth.yearMonth.nextMonth)
+//                        state.animateScrollToMonth(state.firstVisibleMonth.yearMonth.nextMonth)
+
                     }
                 },
             )
@@ -269,7 +287,6 @@ fun CalendarScreen(horizontal: Boolean = true) {
         }
     }
 }
-
 
 @Composable
 private fun FullScreenCalendar(
@@ -328,89 +345,6 @@ private fun MonthHeader(daysOfWeek: List<DayOfWeek>) {
 //
 
 //달력 셀,날짜
-@Composable
-private fun Day(
-    day: CalendarDay,
-    isSelected: Boolean,
-    colors: List<Color> = emptyList(),
-    isToday: Boolean,
-    onClick: (CalendarDay) -> Unit,
-) {
-    Box(
-        Modifier
-            .fillMaxWidth()
-            .fillMaxHeight()
-            .border(
-                width = 0.2.dp,
-                color = Color.LightGray,
-                shape = RectangleShape
-            )
-            .padding(all = 0.dp)
-            .background(
-                color = when {
-                    isSelected -> colorResource(R.color.example_1_selection_color)
-                    isToday -> colorResource(id = R.color.example_5_text_grey_light)
-                    else -> Color.Transparent
-                },
-            )
-            // Disable clicks on inDates/outDates
-            .clickable(
-                enabled = day.position == DayPosition.MonthDate,
-                showRipple = !isSelected,
-                onClick = { onClick(day) },
-            ),
-        contentAlignment = Alignment.TopStart,//날짜 위치
-    ) {
-        val textColor = when (day.position) {
-            // Color.Unspecified will use the default text color from the current theme
-            DayPosition.MonthDate -> if (isSelected) colorResource(R.color.white) else colorResource(R.color.black)
-            DayPosition.InDate, DayPosition.OutDate -> colorResource(R.color.example_5_text_grey_light)
-        }
-        Text(
-            text = day.date.dayOfMonth.toString(),
-            color = textColor,
-            fontSize = 12.sp,
-        )
-        Column(
-            Modifier
-                .align(Alignment.Center)
-                .fillMaxWidth()
-                .padding(bottom = 8.dp),
-            verticalArrangement = Arrangement.Center,
-        ) {
-            for (color in colors) {
-                Box(
-                    Modifier
-                        .fillMaxWidth()
-                        .height(5.dp)
-                        .background(color),
-                )
-            }
-
-            DiaView()
-            MemoView()
-        }
-    }
-}
-
-@Composable
-fun DiaView(
-
-) {
-
-    androidx.compose.material3.Text(
-        text = "Dia",
-        color = Color.Blue,
-    )
-}
-
-@Composable
-fun MemoView() {
-    androidx.compose.material3.Text(
-        text = "Memo",
-        color = Color.Green,
-    )
-}
 
 @Composable
 fun WorkListScreen() {

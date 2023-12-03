@@ -45,36 +45,37 @@ fun SimpleCalendarTitle(
             contentDescription = "GoToday",
             onClick = goToDay,
         )
-        Spacer(modifier = Modifier.width(4.dp))
+        Spacer(modifier = Modifier.width(3.dp))
         Text(
             modifier = Modifier
                 .weight(1f)
                 .testTag("MonthTitle"),
             text = currentMonth.displayText(),
-            fontSize = 20.sp,
+            fontSize = 18.sp,
             textAlign = TextAlign.Start,
             fontWeight = FontWeight.Medium,
         )
-        Spacer(modifier = Modifier.width(15.dp))
+
         Text(
             modifier = Modifier
                 .weight(1f)
                 .testTag("MonthTitle"),
             text = "휴일근무",
-            fontSize = 20.sp,
-            textAlign = TextAlign.Start,
+            fontSize = 15.sp,
+            textAlign = TextAlign.End,
             fontWeight = FontWeight.Medium,
         )
-        Spacer(modifier = Modifier.width(4.dp))
+
         Text(
             modifier = Modifier
                 .weight(1f)
                 .testTag("MonthTitle"),
             text = "휴무",
-            fontSize = 20.sp,
-            textAlign = TextAlign.Start,
+            fontSize = 15.sp,
+            textAlign = TextAlign.End,
             fontWeight = FontWeight.Medium,
         )
+        Spacer(modifier = Modifier.width(4.dp))
         CalendarNavigationIcon(
             icon = painterResource(id = R.drawable.twotone_settings_24),
             contentDescription = "Setting",
