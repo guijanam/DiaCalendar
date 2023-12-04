@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
@@ -44,6 +45,7 @@ fun SimpleCalendarTitle(
             icon = painterResource(id = R.drawable.baseline_settings_backup_restore_24),
             contentDescription = "GoToday",
             onClick = goToDay,
+
         )
         Spacer(modifier = Modifier.width(3.dp))
         Text(

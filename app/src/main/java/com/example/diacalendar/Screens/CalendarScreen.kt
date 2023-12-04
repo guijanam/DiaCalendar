@@ -51,6 +51,10 @@ import kotlinx.coroutines.launch
 import java.time.DayOfWeek
 import java.time.LocalDate
 
+
+
+
+
 @Composable
 fun CalendarScreen(horizontal: Boolean = true) {
     val today = remember { LocalDate.now() }
@@ -88,7 +92,9 @@ fun CalendarScreen(horizontal: Boolean = true) {
                 },
                 goSetting = {
                     coroutineScope.launch {
-                        //drawerState.open()
+//                        drawerState.apply {
+//                            if (isClosed) open() else close()
+//                        }
 //                        state.animateScrollToMonth(state.firstVisibleMonth.yearMonth.nextMonth)
 
                     }
