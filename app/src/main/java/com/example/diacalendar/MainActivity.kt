@@ -67,6 +67,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavDeepLinkRequest
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -100,6 +101,11 @@ import java.time.LocalDate
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+//        lifecycleScope.launch {
+//            DiaCalendarApp.instance.repository.createDiaTableTypes()
+//        }
+
         setContent {
             DiaCalendarTheme {
                 // A surface container using the 'background' color from the theme
