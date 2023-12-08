@@ -7,11 +7,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.diacalendar"
+    namespace = "com.sonbum.diacalendar"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.diacalendar"
+        applicationId = "com.sonbum.diacalendar"
         minSdk = 28
         targetSdk = 34
         versionCode = 1
@@ -67,7 +67,8 @@ dependencies {
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
-    implementation("androidx.compose.material3:material3")
+    implementation("androidx.compose.material3:material3:1.1.2")
+    implementation("androidx.compose.material3:material3-window-size-class:1.1.2")
 
     implementation("com.kizitonwose.calendar:compose:2.5.0-alpha01")
 
@@ -79,8 +80,8 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
-    val nav_version = "2.7.5"
-    implementation("androidx.navigation:navigation-compose:$nav_version")
+    val navversion = "2.7.5"
+    implementation("androidx.navigation:navigation-compose:$navversion")
     val material = "1.6.0-alpha08"
     implementation("androidx.compose.material:material:$material")
 }
