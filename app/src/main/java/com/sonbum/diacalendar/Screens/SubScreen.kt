@@ -2,6 +2,7 @@ package com.sonbum.diacalendar.Screens
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -60,9 +61,25 @@ fun SubScreen(){
 fun SheetContent(
     onHideButtonClick: () -> Unit
 ){
-    LazyColumn(
-        contentPadding = PaddingValues(16.dp)
+    Column(
+        
     ) {
+        Row() {
+            Text(text = "1")
+            Text(text = "원래근무")
+        }
+        Row() {
+            Text(text = "출근")
+            Text(text = "09:00")
+        }
+        Row() {
+            Text(text = "전반")
+            Text(text = "09:30-11:00")
+        }
+        Row() {
+            Text(text = "후반")
+            Text(text = "09:30-11:00")
+        }
 
         }
 

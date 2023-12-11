@@ -135,8 +135,8 @@ sealed class BottomNavItem(
     val title: Int, val icon: Int, val screenRoute: String
 ) {
     object Calendar : BottomNavItem(R.string.text_calendar, R.drawable.ic_calendar, CALENDAR)
-    object Worklist : BottomNavItem(R.string.text_worklist, R.drawable.baseline_directions_subway_24, WORKLIST)
-    object Analysis : BottomNavItem(R.string.text_analysis, R.drawable.ic_clipbord, ANALYSIS)
+    object Worklist : BottomNavItem(R.string.text_worklist, R.drawable.ic_clipbord, WORKLIST)
+    object Analysis : BottomNavItem(R.string.text_analysis, R.drawable.baseline_directions_subway_24, ANALYSIS)
     object Settings : BottomNavItem(R.string.text_settings, R.drawable.ic_settings, SETTINGS)
 }
 

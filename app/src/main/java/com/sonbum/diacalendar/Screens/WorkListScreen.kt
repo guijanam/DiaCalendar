@@ -1,14 +1,18 @@
 package com.sonbum.diacalendar.Screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material.DropdownMenuItem
@@ -33,21 +37,33 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun WorkListScreen() {
 
-    Box(modifier = Modifier
-        .fillMaxSize()
+    Column(modifier = Modifier
+        .fillMaxWidth()
         .background(MaterialTheme.colors.secondaryVariant)
     ) {
-      DiaGridView()
-
-
+        LazyColumn(modifier = Modifier
+            .fillMaxWidth()
+            .background(Color.Blue)
+        ){
+            items(30){
+                DiaRowView()
+            }
+        }
+        Box(modifier = Modifier
+            .fillMaxWidth()
+            .background(Color.Gray)
+        ){
+            Dropdowntype()
+        }
     }
+
 
 }
 @Composable
 fun DiaRowView() {
 
     Row(modifier = Modifier
-        .fillMaxSize()
+        .fillMaxWidth()
         .padding(all = 2.dp)
     ) {
         Text(text = "1")
@@ -70,7 +86,7 @@ fun DiaGridView(){
                 Box( modifier = Modifier
                     .padding(1.dp)
                     .aspectRatio(1f)
-                    .clip(RectangleShape)
+                    .border(width = 1.dp, color = Color.LightGray, shape = RectangleShape)
                     .background(Color.White),
                     contentAlignment = Alignment.Center
                 ) {

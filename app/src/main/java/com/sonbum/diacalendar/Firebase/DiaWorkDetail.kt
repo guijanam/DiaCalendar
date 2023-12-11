@@ -6,13 +6,13 @@ data class DiaWorkDetail(var map: Map<String, Any> = emptyMap()) {
 
     var tableName: String = ""
     var turn : String = ""
-    var workTime : String = "-"
-    var firstTime : String = "-"
-    var secondTime : String = "-"
-    var thirdTime : String = "-"
-    var totalTime : String = "-"
-    var numtr1 : String = "-"
-    var numtr2 : String = "-"
+    var workTime : String = ""
+    var firstTime : String = ""
+    var secondTime : String = ""
+    var thirdTime : String = ""
+    var totalTime : String = ""
+    var numtr1 : String = ""
+    var numtr2 : String = ""
 
     init {
         this.turn = map.get("dia_id") as String

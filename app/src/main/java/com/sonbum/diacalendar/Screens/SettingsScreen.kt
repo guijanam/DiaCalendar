@@ -20,12 +20,13 @@ fun SettingsScreen() {
             .fillMaxSize()
             .background(MaterialTheme.colors.secondaryVariant)
     ) {
-        Text(
-            text = stringResource(id = R.string.text_settings),
-            style = MaterialTheme.typography.h1,
-            textAlign = TextAlign.Center,
-            color = Color.White,
-            modifier = Modifier.align(Alignment.Center)
-        )
+        SubScreen()
+//        Text(
+//            text = stringResource(id = R.string.text_settings),
+//            style = MaterialTheme.typography.h1,
+//            textAlign = TextAlign.Center,
+//            color = Color.White,
+//            modifier = Modifier.align(Alignment.Center)
+//        )
     }
 }
