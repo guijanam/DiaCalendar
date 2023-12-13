@@ -41,11 +41,14 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.sonbum.diacalendar.Screens.AnalysisScreen
 import com.sonbum.diacalendar.Screens.CalendarScreen
-import com.sonbum.diacalendar.Screens.SettingsScreen
+import com.sonbum.diacalendar.Screens.WeekViewScreen
 import com.sonbum.diacalendar.Screens.WorkListScreen
+import com.sonbum.diacalendar.ViewModels.WorkSettingVM
 import com.sonbum.diacalendar.ui.theme.DiaCalendarTheme
 
 class MainActivity : ComponentActivity() {
+
+    val workSettingVM = WorkSettingVM()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -61,7 +64,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    MainScreenView()
+                    MainScreenView(workSettingVM = workSettingVM)
                 }
             }
         }
@@ -69,13 +72,13 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun MainScreenView() {
+fun MainScreenView(workSettingVM : WorkSettingVM) {
     val navController = rememberNavController()
     Scaffold(
         bottomBar = { BottomNavigation(navController = navController) }
     ) {
         Box(Modifier.padding(it)){
-            NavigationGraph(navController = navController)
+            NavigationGraph(navController = navController, workSettingVM)
         }
     }
 }
@@ -137,14 +140,15 @@ sealed class BottomNavItem(
     object Calendar : BottomNavItem(R.string.text_calendar, R.drawable.ic_calendar, CALENDAR)
     object Worklist : BottomNavItem(R.string.text_worklist, R.drawable.ic_clipbord, WORKLIST)
     object Analysis : BottomNavItem(R.string.text_analysis, R.drawable.baseline_directions_subway_24, ANALYSIS)
-    object Settings : BottomNavItem(R.string.text_settings, R.drawable.ic_settings, SETTINGS)
+    object Settings : BottomNavItem(R.string.text_settings, R.drawable.baseline_view_week_24, WEEKVIEW)
 }
 
 @Composable
-fun NavigationGraph(navController: NavHostController) {
+fun NavigationGraph(navController: NavHostController,
+                    workSettingVM : WorkSettingVM) {
     NavHost(navController = navController, startDestination = BottomNavItem.Calendar.screenRoute) {
         composable(BottomNavItem.Calendar.screenRoute) {
-            CalendarScreen()
+            CalendarScreen(workSettingVM = workSettingVM)
         }
         composable(BottomNavItem.Worklist.screenRoute) {
             WorkListScreen()
@@ -153,15 +157,15 @@ fun NavigationGraph(navController: NavHostController) {
             AnalysisScreen()
         }
         composable(BottomNavItem.Settings.screenRoute) {
-            SettingsScreen()
+            WeekViewScreen()
         }
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun MainScreenPreview() {
-    DiaCalendarTheme {
-        MainScreenView()
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun MainScreenPreview() {
+//    DiaCalendarTheme {
+//        MainScreenView()
+//    }
+//}

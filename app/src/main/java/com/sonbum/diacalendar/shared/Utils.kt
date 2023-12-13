@@ -5,11 +5,17 @@ import android.content.Context
 import android.content.ContextWrapper
 import com.kizitonwose.calendar.core.Week
 import com.kizitonwose.calendar.core.yearMonth
+import java.text.SimpleDateFormat
 import java.time.DayOfWeek
 import java.time.Month
 import java.time.YearMonth
 import java.time.format.TextStyle
 import java.util.*
+
+fun String.makeDate(): Date {
+    val formatter = SimpleDateFormat("yyyy/MM/dd")
+    return formatter.parse(this)
+}
 
 fun YearMonth.displayText(short: Boolean = false): String {
     return "${this.year}.${this.month.displayText(short = short)}"

@@ -5,6 +5,11 @@ import com.sonbum.diacalendar.Firebase.Company
 import com.sonbum.diacalendar.Firebase.CompanyListItem
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
+import kotlinx.coroutines.internal.resumeCancellableWith
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlin.coroutines.Continuation
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 
 object FirebaseManager {
@@ -16,8 +21,8 @@ object FirebaseManager {
     val companyListInfoDbRef = db.collection("company_list_info")
         .orderBy("office_name")
 
-
-    fun fetchCompanyListInfo(fetched: (companyList: List<CompanyListItem>) -> Unit) {
+    // lambda to coroutine suspend function
+    suspend fun fetchCompanyListInfo() : List<CompanyListItem> = suspendCoroutine { continuation: Continuation<List<CompanyListItem>> ->
         companyListInfoDbRef
             .get()
             .addOnSuccessListener { result ->
@@ -25,32 +30,37 @@ object FirebaseManager {
                     Log.d(TAG, "${document.id} => ${document.data}")
                 }
                 val fetchedCompanyList = CompanyListItem.getCompanyItemList(result)
-                fetched(fetchedCompanyList)
+                continuation.resume(fetchedCompanyList)
             }
             .addOnFailureListener { exception ->
                 Log.w(TAG, "Error getting documents.", exception)
+
             }
     }
 
-    fun fetchCertainCompanyInfo(documentId: String, completion: (company: Company) -> Unit) {
+    suspend fun fetchCertainCompanyInfo(documentId: String) : Company {
+        return suspendCoroutine {
+            val companyRef = Firebase.firestore
+                .collection("companies")
+                .document(documentId)
 
-        val companyRef = Firebase.firestore
-            .collection("companies")
-            .document(documentId)
-
-        companyRef
-            .get()
-            .addOnSuccessListener { result ->
+            companyRef
+                .get()
+                .addOnSuccessListener { result ->
 //                for (document in result) {
 //                    Log.d(TAG, "${document.id} => ${document.data}")
 //                }
 
-                val fetchedCompany = Company(documentSnapshot = result, ref = companyRef)
-                completion.invoke(fetchedCompany)
-            }
-            .addOnFailureListener { exception ->
-                Log.w(TAG, "Error getting documents.", exception)
-            }
+                    val fetchedCompany = Company(documentSnapshot = result, ref = companyRef)
+//                    completion.invoke(fetchedCompany)
+                    it.resume(fetchedCompany)
+                }
+                .addOnFailureListener { exception ->
+                    Log.w(TAG, "Error getting documents.", exception)
+                }
+        }
+
+
     }
 
 

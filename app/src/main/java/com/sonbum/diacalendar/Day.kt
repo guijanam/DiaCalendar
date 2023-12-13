@@ -60,6 +60,7 @@ fun Day(
             DayPosition.InDate, DayPosition.OutDate -> colorResource(R.color.example_5_text_grey_light)
 
 
+
         }
         Text(
             text = day.date.dayOfMonth.toString(),

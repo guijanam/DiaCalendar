@@ -4,7 +4,7 @@
     <string name="text_calendar">캘린더</string>
     <string name="text_worklist">근무표</string>
     <string name="text_analysis">실시간</string>
-    <string name="text_settings">설정</string>
+    <string name="text_settings">주간</string>
 
     <string name="activity_title_view">Calendar View Sample</string>
     <string name="example_1_title">Example 1</string>
