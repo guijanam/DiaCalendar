@@ -32,7 +32,7 @@ fun AnalysisScreen() {
                     }
                 }
                 settings.javaScriptEnabled = true
-                loadUrl("http://m.bus.go.kr/mBus/subway.bms")
+                loadUrl("https://roaring-daifuku-d5d674.netlify.app/")
                 webView = this
             }
         }, update = {

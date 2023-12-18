@@ -193,12 +193,11 @@ fun CalendarScreen(horizontal: Boolean = true,
                                     isToday = day.position == DayPosition.MonthDate && day.date == today,
                                 ) { clicked ->
 
-                                    // 다중선택
-                                    if (selections.contains(clicked)) {
+
                                         // TODO: - subsheet present
                                         // SubScreen()
 
-                                    }
+
                                 }
                             },
                             // The month body is only needed for ui test tag.
@@ -348,9 +347,8 @@ fun SheetContent(
 @Composable
 fun DropdownCompany(workSettingVM: WorkSettingVM) {
 
-    val tabletype = workSettingVM.fetchedCompanyNamesFlow.collectAsState()
+    val companytype = workSettingVM.fetchedCompanyNamesFlow.collectAsState()
 
-//    val tabletype = listOf<String>("평일","휴일")
     var expanded by remember { mutableStateOf(false) }
 //    var selectedOptionText by remember { mutableStateOf(tabletype[0]) }
 
@@ -368,7 +366,7 @@ fun DropdownCompany(workSettingVM: WorkSettingVM) {
                 workSettingVM.companySelected(it)
             },
             readOnly = true,
-            //label = { Text(text = "근무표")},
+            //label = { Text(text = "소속승무소")},
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)},
             colors = ExposedDropdownMenuDefaults.textFieldColors()
         )
@@ -376,7 +374,7 @@ fun DropdownCompany(workSettingVM: WorkSettingVM) {
             expanded = expanded,
             onDismissRequest = { expanded = false })
         {
-            tabletype.value.forEach { selectedText ->
+            companytype.value.forEach { selectedText ->
                 DropdownMenuItem(onClick = {
                     workSettingVM.companySelected(selectedText)
                     expanded = false
@@ -398,7 +396,7 @@ fun DropdownDiaselect(workSettingVM: WorkSettingVM) {
 
     val tabletype = workSettingVM.fetchedCompanyNamesFlow.collectAsState()
 
-//    val tabletype = listOf<String>("평일","휴일")
+
     var expanded by remember { mutableStateOf(false) }
 //    var selectedOptionText by remember { mutableStateOf(tabletype[0]) }
 
@@ -416,7 +414,7 @@ fun DropdownDiaselect(workSettingVM: WorkSettingVM) {
                 workSettingVM.companySelected(it)
             },
             readOnly = true,
-            //label = { Text(text = "근무표")},
+            //label = { Text(text = "오늘 근무")},
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)},
             colors = ExposedDropdownMenuDefaults.textFieldColors()
         )

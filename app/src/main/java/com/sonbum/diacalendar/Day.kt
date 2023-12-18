@@ -54,6 +54,7 @@ fun Day(
             ),
         contentAlignment = Alignment.TopStart,//날짜 위치
     ) {
+        //날짜 토,일 색깔 바꾸기
         val textColor = when (day.position) {
             // Color.Unspecified will use the default text color from the current theme
             DayPosition.MonthDate -> if (isSelected) colorResource(R.color.white) else colorResource(R.color.black)

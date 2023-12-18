@@ -15,8 +15,7 @@ import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-class WorkSettingVM () : ViewModel() {
-//    private val companyInfoItemList: List<String>
+class WorkSettingVM : ViewModel() {
 
     // original
     private var fetchedCompaniesFlow : MutableStateFlow<List<CompanyListItem>> = MutableStateFlow(emptyList())

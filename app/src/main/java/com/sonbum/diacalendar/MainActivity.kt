@@ -88,7 +88,7 @@ fun BottomNavigation(navController: NavHostController) {
     val items = listOf(
         BottomNavItem.Calendar,
         BottomNavItem.Worklist,
-        BottomNavItem.Analysis,
+        //BottomNavItem.Analysis,
         BottomNavItem.Settings
     )
 
@@ -139,7 +139,7 @@ sealed class BottomNavItem(
 ) {
     object Calendar : BottomNavItem(R.string.text_calendar, R.drawable.ic_calendar, CALENDAR)
     object Worklist : BottomNavItem(R.string.text_worklist, R.drawable.ic_clipbord, WORKLIST)
-    object Analysis : BottomNavItem(R.string.text_analysis, R.drawable.baseline_directions_subway_24, ANALYSIS)
+    //object Analysis : BottomNavItem(R.string.text_analysis, R.drawable.baseline_directions_subway_24, ANALYSIS)
     object Settings : BottomNavItem(R.string.text_settings, R.drawable.baseline_view_week_24, WEEKVIEW)
 }
 
@@ -153,9 +153,9 @@ fun NavigationGraph(navController: NavHostController,
         composable(BottomNavItem.Worklist.screenRoute) {
             WorkListScreen()
         }
-        composable(BottomNavItem.Analysis.screenRoute) {
-            AnalysisScreen()
-        }
+//        composable(BottomNavItem.Analysis.screenRoute) {
+//            AnalysisScreen()
+//        }
         composable(BottomNavItem.Settings.screenRoute) {
             WeekViewScreen()
         }
