@@ -40,6 +40,17 @@ object FirebaseManager {
     }
 
     suspend fun fetchCertainCompanyInfo(documentRef: DocumentReference) : Company {
+
+        var company : Company =  internalFetchCertainCompanyInfo(documentRef)
+
+        val diaTables = company.fetchDiaTables()
+
+        company.diaTables = diaTables
+
+        return company
+    }
+
+    private suspend fun internalFetchCertainCompanyInfo(documentRef: DocumentReference) : Company {
         return suspendCoroutine {
 
             documentRef
@@ -48,7 +59,6 @@ object FirebaseManager {
 //                for (document in result) {
 //                    Log.d(TAG, "${document.id} => ${document.data}")
 //                }
-
                     val test  = result.data
                     Log.d(TAG, "fetchCertainCompanyInfo: $test")
                     val fetchedCompany = Company(documentSnapshot = result, ref = documentRef)
@@ -59,8 +69,6 @@ object FirebaseManager {
                     Log.w(TAG, "Error getting documents.", exception)
                 }
         }
-
-
     }
 
 

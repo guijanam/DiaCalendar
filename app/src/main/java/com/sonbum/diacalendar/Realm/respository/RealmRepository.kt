@@ -1,11 +1,19 @@
-package com.sonbum.diacalendar.Realm
+package com.sonbum.diacalendar.Realm.respository
 
 import android.util.Log
 import com.sonbum.diacalendar.Firebase.Company
+import com.sonbum.diacalendar.Realm.DiaItemEntity
+import com.sonbum.diacalendar.Realm.DiaTableEntity
+import com.sonbum.diacalendar.Realm.DiaTableTypeEntity
+import com.sonbum.diacalendar.Realm.UserCompanyEntity
+import com.sonbum.diacalendar.Realm.UserDateAndTurnListEntity
 import io.realm.kotlin.Realm
 import io.realm.kotlin.RealmConfiguration
+import io.realm.kotlin.delete
 import io.realm.kotlin.ext.query
+import io.realm.kotlin.ext.realmListOf
 import io.realm.kotlin.ext.toRealmList
+import io.realm.kotlin.ext.toRealmSet
 import io.realm.kotlin.query.RealmResults
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -26,9 +34,11 @@ class RealmRepository(
         // Creates a realm with default configuration values
         val config = RealmConfiguration.Builder(
             // Pass object classes for the realm schema
-            schema = setOf(DiaItemEntity::class,
+            schema = setOf(
+                DiaItemEntity::class,
                 DiaTableEntity::class,
-                DiaTableTypeEntity::class)
+                DiaTableTypeEntity::class,
+                UserCompanyEntity::class)
         ).build()
         // Open the realm with the configuration object
         this.realm = Realm.open(config)
@@ -38,7 +48,7 @@ class RealmRepository(
         }
     }
 
-    suspend fun createDiaTableTypes() {
+    private suspend fun createDiaTableTypes() {
 
         // fetch all objects of a type as a results collection, synchronously
         val types: RealmResults<DiaTableTypeEntity> = realm.query<DiaTableTypeEntity>().find()
@@ -95,30 +105,45 @@ class RealmRepository(
         if (diaTableTypes.isEmpty()) {
             return null
         }
-        return diaTableTypes.filter { it.name == name }.first()
+        return diaTableTypes.first { it.name == name }
     }
 
     // create user company
-    suspend fun createUserCompany(company: Company) {
-        val userCompany = UserCompanyEntity().apply {
-            this.name = company.name
-        }
-
-        val diaTurn = company.diaTurnList
-
-        val diaSelectList = company.diaSelectedList
-
-//        val diaTables = company.diaTables.map {
-//            DiaTableEntity(typeName = it.key, diaWorkDetails = it.value.diaWorkDetails.values.toList())
-//        }
-
-//        userCompany.diaTables = diaTables.toRealmSet()
+    suspend fun updateUserCompany(company: Company) {
 
         realm.write {
-            copyToRealm(userCompany)
+
+//            // 1. delete existings
+            this.delete(query<UserCompanyEntity>().find())
+            this.delete(query<DiaTableEntity>().find())
+
+            val diaTableEntities = company.diaTables.map {
+
+                val diaTableTypeEntity = this.query<DiaTableTypeEntity>("name = $0", it.key).find().first()
+
+                val diaItemEntities = it.value.diaWorkDetails.values.map{ aDiaWorkDetail ->
+                    DiaItemEntity.create(aDiaWorkDetail)
+                }
+
+                DiaTableEntity().apply {
+                    this.diaTableType = diaTableTypeEntity
+                    this.diaItems = diaItemEntities.toRealmSet()
+                }
+            }
+
+            val userCompanyEntity = UserCompanyEntity().apply {
+                this.name = company.name
+                this.diaTurn = company.diaTurnList.toRealmList()
+                this.diaSelect = company.diaSelectedList.toRealmList()
+//                // TODO: diaTables
+                this.diaTables = diaTableEntities.toRealmSet()
+            }
+
+            this.copyToRealm(userCompanyEntity)
         }
 
     }
+
 
     fun fetchUserDateAndTurnList() : List<UserDateAndTurnListEntity> =
         realm.query<UserDateAndTurnListEntity>().find().map { it }

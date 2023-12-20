@@ -1,7 +1,7 @@
 package com.sonbum.diacalendar
 
 import android.app.Application
-import com.sonbum.diacalendar.Realm.RealmRepository
+import com.sonbum.diacalendar.Realm.respository.RealmRepository
 
 class DiaCalendarApp : Application() {
 

@@ -3,9 +3,11 @@ package com.sonbum.diacalendar.ViewModels
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.sonbum.diacalendar.DiaCalendarApp
 import com.sonbum.diacalendar.Firebase.Company
 import com.sonbum.diacalendar.Firebase.CompanyListItem
 import com.sonbum.diacalendar.Managers.FirebaseManager
+import com.sonbum.diacalendar.Realm.respository.RealmRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -51,8 +53,6 @@ class WorkSettingVM : ViewModel() {
 
     // 근무선택리스트
 
-
-
     companion object {
         const val TAG : String = "WorkSettingVM"
     }
@@ -75,7 +75,9 @@ class WorkSettingVM : ViewModel() {
                     // suspend
                     flow<Company> {
                         it.ref?.let {doc ->
-                            emit(FirebaseManager.fetchCertainCompanyInfo(doc))
+                            val fetchedCompany = FirebaseManager.fetchCertainCompanyInfo(doc)
+                            DiaCalendarApp.instance.repository.updateUserCompany(fetchedCompany)
+                            emit(fetchedCompany)
                         }
                     }
                 }
