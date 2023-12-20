@@ -5,8 +5,11 @@ import com.google.firebase.firestore.QueryDocumentSnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
-data class DiaTableItem(var tableName: String = "",
-                        var documentId: String = "") {
+data class DiaTableItem(
+    var tableName: String = "",
+    var documentId: String = "",
+)
+{
 
     val docRef: DocumentReference
         get() = Firebase.firestore.document(this.documentId)

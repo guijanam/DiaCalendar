@@ -20,11 +20,15 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.darkColors
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.ModalDrawerSheet
@@ -79,8 +83,6 @@ fun CalendarScreen(horizontal: Boolean = true,
     val endMonth = remember { currentMonth.plusMonths(500) }
     val selections = remember { mutableStateListOf<CalendarDay>() }
     val daysOfWeek = remember { daysOfWeek() }
-
-
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     ModalNavigationDrawer(
@@ -93,38 +95,36 @@ fun CalendarScreen(horizontal: Boolean = true,
                         .padding(16.dp)
                 )
 
-
                 Divider()
-                Text("승무소",
+                Text("소속 선택",
                     modifier = Modifier
                         .padding(16.dp)
                 )
+
 //                NavigationDrawerItem(
 //                    label = { Text(text = "승무소를 선택하세요") },
 //                    selected = false,
 //                    onClick = { /*TODO*/ }
 //                )
+
                 DropdownCompany(workSettingVM)
                 Divider()
-                Text("오늘근무",
+                Text("오늘근무 선택",
                     modifier = Modifier
                         .padding(16.dp)
                 )
                 DropdownDiaselect(workSettingVM)
-//                NavigationDrawerItem(
-//                    label = { Text(text = "Dia를 선택하세요") },
-//                    selected = false,
-//                    onClick = { /*TODO*/ }
-//                )
+
                 Divider()
 
             }
         },
     ) {
         Scaffold(
+
 //            floatingActionButton = {
 //                ExtendedFloatingActionButton(
-//                    text = { Text("Show drawer") },
+//                    text = { Text("") },
 //                    icon = { Icon(Icons.Filled.Add, contentDescription = "") },
 //                    onClick = {
 //                        scope.launch {
@@ -135,6 +135,7 @@ fun CalendarScreen(horizontal: Boolean = true,
 //                    }
 //                )
 //            }
+
         ) { contentPadding ->
             // Screen content
             Surface(
@@ -220,8 +221,6 @@ fun CalendarScreen(horizontal: Boolean = true,
             }
         }
     }
-
-
 
 }
 
@@ -393,16 +392,13 @@ fun DropdownCompany(workSettingVM: WorkSettingVM) {
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun DropdownDiaselect(workSettingVM: WorkSettingVM) {
-
-    val tabletype = workSettingVM.fetchedCompanyNamesFlow.collectAsState()
-
+    //선택한 승무소 diaselect 변수 만들기
+    val diaselects = workSettingVM.fetcheddiaSelectListStateFlow.collectAsState()
 
     var expanded by remember { mutableStateOf(false) }
-//    var selectedOptionText by remember { mutableStateOf(tabletype[0]) }
 
-    val selectedOptionText = workSettingVM.selectedCompanyName.collectAsState()
 
-    val coroutineScope = rememberCoroutineScope()
+    val selectedOptionText = workSettingVM.selectedDia.collectAsState()
 
     ExposedDropdownMenuBox(
         expanded = expanded ,
@@ -411,7 +407,7 @@ fun DropdownDiaselect(workSettingVM: WorkSettingVM) {
         TextField(
             value = selectedOptionText.value,
             onValueChange = {
-                workSettingVM.companySelected(it)
+                workSettingVM.diaSelected(it)
             },
             readOnly = true,
             //label = { Text(text = "오늘 근무")},
@@ -422,9 +418,9 @@ fun DropdownDiaselect(workSettingVM: WorkSettingVM) {
             expanded = expanded,
             onDismissRequest = { expanded = false })
         {
-            tabletype.value.forEach { selectedText ->
+            diaselects.value.forEach { selectedText ->
                 DropdownMenuItem(onClick = {
-                    workSettingVM.companySelected(selectedText)
+                    workSettingVM.diaSelected(selectedText)
                     expanded = false
                 }) {
                     Text(text = selectedText)

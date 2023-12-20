@@ -4,6 +4,7 @@ import android.util.Log
 import com.sonbum.diacalendar.Firebase.Company
 import com.sonbum.diacalendar.Firebase.CompanyListItem
 import com.google.firebase.Firebase
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.firestore
 import kotlinx.coroutines.internal.resumeCancellableWith
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -38,20 +39,19 @@ object FirebaseManager {
             }
     }
 
-    suspend fun fetchCertainCompanyInfo(documentId: String) : Company {
+    suspend fun fetchCertainCompanyInfo(documentRef: DocumentReference) : Company {
         return suspendCoroutine {
-            val companyRef = Firebase.firestore
-                .collection("companies")
-                .document(documentId)
 
-            companyRef
+            documentRef
                 .get()
                 .addOnSuccessListener { result ->
 //                for (document in result) {
 //                    Log.d(TAG, "${document.id} => ${document.data}")
 //                }
 
-                    val fetchedCompany = Company(documentSnapshot = result, ref = companyRef)
+                    val test  = result.data
+                    Log.d(TAG, "fetchCertainCompanyInfo: $test")
+                    val fetchedCompany = Company(documentSnapshot = result, ref = documentRef)
 //                    completion.invoke(fetchedCompany)
                     it.resume(fetchedCompany)
                 }
