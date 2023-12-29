@@ -37,7 +37,7 @@ fun SimpleCalendarTitle(
     goSetting: () -> Unit,
 ) {
     Row(
-        modifier = modifier.height(34.dp),
+        modifier = modifier.height(33.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         CalendarNavigationIcon(
@@ -47,12 +47,13 @@ fun SimpleCalendarTitle(
 
         )
         Spacer(modifier = Modifier.width(3.dp))
+        //여기를 누르면 date picker
         Text(
             modifier = Modifier
                 .weight(1f)
                 .testTag("MonthTitle"),
             text = currentMonth.displayText(),
-            fontSize = 18.sp,
+            fontSize = 19.sp,
             textAlign = TextAlign.Start,
             fontWeight = FontWeight.Medium,
         )
@@ -61,8 +62,8 @@ fun SimpleCalendarTitle(
             modifier = Modifier
                 .weight(1f)
                 .testTag("MonthTitle"),
-            text = "휴일근무",
-            fontSize = 15.sp,
+            text = "휴일근무:4",
+            fontSize = 16.sp,
             textAlign = TextAlign.End,
             fontWeight = FontWeight.Medium,
         )
@@ -71,12 +72,12 @@ fun SimpleCalendarTitle(
             modifier = Modifier
                 .weight(1f)
                 .testTag("MonthTitle"),
-            text = "휴무",
-            fontSize = 15.sp,
+            text = "휴무:8",
+            fontSize = 16.sp,
             textAlign = TextAlign.End,
             fontWeight = FontWeight.Medium,
         )
-        Spacer(modifier = Modifier.width(4.dp))
+        Spacer(modifier = Modifier.width(21.dp))
         CalendarNavigationIcon(
             icon = painterResource(id = R.drawable.twotone_settings_24),
             contentDescription = "Setting",

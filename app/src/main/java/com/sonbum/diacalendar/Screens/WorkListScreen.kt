@@ -43,7 +43,7 @@ fun WorkListScreen() {
     ) {
         LazyColumn(modifier = Modifier
             .fillMaxWidth()
-            .background(Color.Blue)
+            .background(Color.Gray)
         ){
             items(30){
                 DiaRowView()

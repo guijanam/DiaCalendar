@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.filterNot
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
@@ -51,8 +52,6 @@ class WorkSettingVM : ViewModel() {
     var selectedCompanyName : StateFlow<String> = selectedCompany.map { it?.officeName }.mapNotNull { it }
         .stateIn(scope = viewModelScope, started = SharingStarted.WhileSubscribed(), initialValue = "소속을 선택하세요")
 
-    // 근무선택리스트
-
     companion object {
         const val TAG : String = "WorkSettingVM"
     }
@@ -67,8 +66,18 @@ class WorkSettingVM : ViewModel() {
             fetchedCompaniesFlow.emit(fetchedCompanyList)
         }
 
+        viewModelScope.launch {
+            selectedDia
+                .filterNot { it == "다이아를 선택하세요" }
+                // TODO: dia calculate -> make dia turns
+                // TODO: turn & todayDia store
+                .collectLatest {
+                    Log.d(TAG, ": seletedDia : $it")
+                }
+        }
 
         viewModelScope.launch {
+
             selectedCompany
                 .mapNotNull { it }
                 .flatMapLatest {
@@ -85,7 +94,7 @@ class WorkSettingVM : ViewModel() {
                     Log.d(TAG, "fetchedCompany: ${it.toString()}")
                     this@WorkSettingVM.fetcheddiaSelectListFlow.emit(it.diaSelectedList)
                     Log.d(TAG, "selectedCompanyName: $it")
-            }
+                }
         }
 
         viewModelScope.launch {
@@ -109,7 +118,6 @@ class WorkSettingVM : ViewModel() {
         val selectedDiaEntity = this.fetcheddiaSelectListStateFlow.value.filter { it == name }.first()
         viewModelScope.launch {
             selectedDia.emit(selectedDiaEntity)
-
         }
     }
 

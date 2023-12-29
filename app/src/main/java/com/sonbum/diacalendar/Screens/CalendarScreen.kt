@@ -85,6 +85,7 @@ fun CalendarScreen(horizontal: Boolean = true,
     val daysOfWeek = remember { daysOfWeek() }
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
+    var openBottomSheet by remember { mutableStateOf(false) }
     ModalNavigationDrawer(
 
         drawerState = drawerState,
@@ -148,7 +149,7 @@ fun CalendarScreen(horizontal: Boolean = true,
                     modifier = Modifier
                         .fillMaxSize()
                         .background(Color.LightGray)//상단 년도 배경색
-                        .padding(top = 2.dp),
+                        .padding(top = 1.dp),
                 ) {
                     val state = rememberCalendarState(
                         startMonth = startMonth,
@@ -162,7 +163,7 @@ fun CalendarScreen(horizontal: Boolean = true,
                     // Draw light content on dark background.
                     CompositionLocalProvider(LocalContentColor provides darkColors().onSurface) {
                         SimpleCalendarTitle(
-                            modifier = Modifier.padding(all = 1.dp),
+                            modifier = Modifier.padding(all = 0.dp),
                             currentMonth = visibleMonth.yearMonth,
                             goToDay = {
                                 coroutineScope.launch {
@@ -195,6 +196,12 @@ fun CalendarScreen(horizontal: Boolean = true,
                                 ) { clicked ->
 
 
+
+//                                    if (selections.contains(clicked)) {
+//                                        selections.remove(clicked)
+//                                        } else {
+//                                        selections.add(clicked)
+//                                         }
                                         // TODO: - subsheet present
                                         // SubScreen()
 
@@ -268,6 +275,18 @@ private fun MonthHeader(daysOfWeek: List<DayOfWeek>) {
             .background(colorResource(id = R.color.example_1_bg_secondary))
             .padding(all = 1.dp),
     ) {
+        //여기에 요일 색깔
+//        val textColor = when (day.position) {
+//            // Color.Unspecified will use the default text color from the current theme
+//            DayPosition.MonthDate -> if (isSelected) colorResource(R.color.white) else colorResource(R.color.black)
+//            DayPosition.InDate, DayPosition.OutDate -> colorResource(R.color.example_5_text_grey_light)
+//
+//        }
+//        val textColor = when (daysOfWeek.first()) {
+//
+//            else -> {}
+//        }
+
         for (dayOfWeek in daysOfWeek) {
             Text(
                 modifier = Modifier.weight(1f),
@@ -349,11 +368,10 @@ fun DropdownCompany(workSettingVM: WorkSettingVM) {
     val companytype = workSettingVM.fetchedCompanyNamesFlow.collectAsState()
 
     var expanded by remember { mutableStateOf(false) }
-//    var selectedOptionText by remember { mutableStateOf(tabletype[0]) }
 
     val selectedOptionText = workSettingVM.selectedCompanyName.collectAsState()
 
-    val coroutineScope = rememberCoroutineScope()
+    //val coroutineScope = rememberCoroutineScope()
 
     ExposedDropdownMenuBox(
         expanded = expanded ,
@@ -396,8 +414,6 @@ fun DropdownDiaselect(workSettingVM: WorkSettingVM) {
     val diaselects = workSettingVM.fetcheddiaSelectListStateFlow.collectAsState()
 
     var expanded by remember { mutableStateOf(false) }
-
-
     val selectedOptionText = workSettingVM.selectedDia.collectAsState()
 
     ExposedDropdownMenuBox(

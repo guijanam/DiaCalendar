@@ -6,24 +6,23 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
 data class DiaTableItem(
-    var tableName: String = "",
-    var documentId: String = "",
+    var documentId : String = "",
+    val querySnapshot: QueryDocumentSnapshot
 )
 {
 
-    val docRef: DocumentReference
-        get() = Firebase.firestore.document(this.documentId)
+//    val docRef: DocumentReference
+//        get() = Firebase.firestore.document(this.documentId)
 
+    var tableName : String = ""
     var diaWorkDetails : MutableMap<String, DiaWorkDetail> = mutableMapOf()
 
-    constructor(querySnapshot: QueryDocumentSnapshot) : this() {
+    init {
         querySnapshot.data.forEach { data ->
             if (data.key == "table_name") {
                 this.tableName = data.key
             }
-            (data.value as Map<String, Any>)?.let {
-//                .set(key: K, value: V)
-//                (source)
+            (data.value as? Map<String, Any>?)?.let {
                 val value = DiaWorkDetail(map = it)
                 diaWorkDetails.set(key = data.key, value = value)
             }

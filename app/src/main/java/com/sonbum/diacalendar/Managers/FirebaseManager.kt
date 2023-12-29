@@ -17,6 +17,7 @@ object FirebaseManager {
 
     const val TAG = "FirebaseManager"
 
+    //파이어스토어 초기화
     val db = Firebase.firestore
     
     val companyListInfoDbRef = db.collection("company_list_info")

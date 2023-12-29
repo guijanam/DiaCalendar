@@ -32,6 +32,8 @@ data class Company(
         const val TAG = "Company"
     }
 
+
+
     suspend fun fetchDiaTables() : Map<String, DiaTableItem> {
 
         var fetchedDiaTables = emptyMap<String, DiaTableItem>()
@@ -46,13 +48,14 @@ data class Company(
                         Log.d(TAG, "${document.id} => ${document.data}")
 
                         val tableName = document.data.get("table_name") as String? ?: ""
-                        val diaTableItem = DiaTableItem(tableName, document.id)
+                        val diaTableItem = DiaTableItem(documentId = document.id, querySnapshot = document)
                         resultMap[tableName] = diaTableItem
                     }
                     continuation.resume(resultMap)
                 }
                 .addOnFailureListener { exception ->
                     Log.w(TAG, "Error getting documents.", exception)
+                    continuation.resume(fetchedDiaTables)
                 }
         }
 

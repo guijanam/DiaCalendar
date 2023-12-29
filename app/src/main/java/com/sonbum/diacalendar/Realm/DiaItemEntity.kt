@@ -12,10 +12,10 @@ class DiaItemEntity : RealmObject {
     var workTime : String = ""
     var firstTime : String = ""
     var secondTime : String = ""
-    var thirdTime : String = ""
-    var totalTime : String = ""
-    var numtr1 : String = ""
-    var numtr2 : String = ""
+    var thirdTime : String = ""//야간시간 수당
+    var totalTime : String = ""//총근무
+    var numtr1 : String = ""//전반 열번
+    var numtr2 : String = ""//후반 열번
 
     companion object {
         fun create(diaWorkDetail: DiaWorkDetail) : DiaItemEntity =
@@ -31,7 +31,4 @@ class DiaItemEntity : RealmObject {
         }
     }
 
-//    fun toDiaWorkDetail(): DiaWorkDetail {
-//        return DiaWorkDetail(entity = this)
-//    }
 }

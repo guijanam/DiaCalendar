@@ -16,6 +16,6 @@ class UserCompanyEntity : RealmObject {
     var name: String = ""
     var diaTurn: RealmList<String> = realmListOf()
     var diaSelect: RealmList<String> = realmListOf()
-    var diaTables: RealmSet<DiaTableEntity> = realmSetOf()
+    var diaTables: RealmList<DiaTableEntity> = realmListOf()
 
 }
