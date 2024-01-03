@@ -25,13 +25,15 @@ import java.util.Locale
 
 class RealmRepository(
     private val externalScope : CoroutineScope =
-    CoroutineScope(SupervisorJob() + Dispatchers.Default)) {
+    CoroutineScope(SupervisorJob() + Dispatchers.Default)
+)
+{
 
     companion object {
         const val TAG: String = "RealmRepository"
     }
 
-    private var realm: Realm
+    var realm: Realm
 
     init {
         // Creates a realm with default configuration values
@@ -53,7 +55,11 @@ class RealmRepository(
         }
     }
 
-    private suspend fun createDiaTableEntity(typeName: String, diaWorkDetails: List<DiaWorkDetail>) : DiaTableEntity {
+    private suspend fun createDiaTableEntity(
+        typeName: String,
+        diaWorkDetails: List<DiaWorkDetail>
+    ) : DiaTableEntity
+    {
 
         val diaTableEntity = DiaTableEntity().apply {
             this.diaTableType = this@RealmRepository.fetchDiaTableTypeEntity(typeName)
@@ -117,8 +123,8 @@ class RealmRepository(
             val existingUserDateAndTurnListEntities = realm.query<UserDateAndTurnListEntity>().find()
             delete(existingUserDateAndTurnListEntities)
 
-//            val existingUserUserEntities = realm.query<UserEntity>().find()
-//            delete(existingUserUserEntities)
+//            val existingUserEntities = realm.query<UserEntity>().find()
+//            delete(existingUserEntities)
 
 
 
@@ -157,6 +163,7 @@ class RealmRepository(
             //            // 1. delete existings
             this.delete(query<UserCompanyEntity>().find())
             this.delete(query<DiaTableEntity>().find())
+            this.delete(query<DiaItemEntity>().find())
             val diaTableEntities = company.diaTables.map { aDiaTable ->
                 val diaWorkDetails : List<DiaWorkDetail> = aDiaTable.value.diaWorkDetails.map { it.value }
                 DiaTableEntity().apply {
@@ -195,59 +202,76 @@ class RealmRepository(
     ///   - selectedDate: 세팅시 기준이 되는 날짜
     ///   - selectedDia:  세팅시 기준이 되는 Dia
     ///   - turnList:     교번 목록 - companyEntity - diaTurns
-    fun updateUserDateAndTurnList(selectedDate: String, seletedDia: String, turnList: List<String>){
+    suspend fun updateUserDateAndTurnList(
+        selectedDate: String,
+        seletedDia: String,
+        turnList: List<String>
+    )
+    {
         val todayDia = seletedDia
         val multiplyCount = 11
         val leftCycleCount = (multiplyCount - 1) / 2
-        val tripleDiaTurnList = List(multiplyCount) { turnList }
+        val tripleDiaTurnList = List(multiplyCount) { turnList }.flatten()
 
         val foundIndex = turnList.indexOfFirst { it == todayDia }
 
-        val centerIndex = (turnList.count() * leftCycleCount) + foundIndex
+        val centerIndex = (turnList.count() * leftCycleCount) + foundIndex - 1
 
-//        val (match, rest) = numbers.partition { it.length > 3 }
-        val trimedTurnListLeft = tripleDiaTurnList.splitAt(centerIndex).first.flatten()
+        // 오늘 기준 왼쪽
+        val (trimedTurnListLeft, rest) = tripleDiaTurnList
+            .withIndex()
+            .partition { it.index <= centerIndex }
 
-        //val dateArray = this.dates(trimedTurnListLeft.count(), dayCount = tripleDiaTurnList.count())
+        Log.d(TAG, "updateUserDateAndTurnList: ")
+        val dateArray = this.dates(trimedTurnListLeft.count()
+            , dayCount = tripleDiaTurnList.count())
 
+        val dateAndTurnList : List<Pair<String, String>> = dateArray.zip(tripleDiaTurnList)
 
+        Log.d(TAG, "dateAndTurnList.size: ${dateAndTurnList.size}")
+        realm.write {
+            // 1. delete existing
+            this.delete(query<UserDateAndTurnListEntity>().find())
+
+            // 2. create data
+            dateAndTurnList.forEach {
+                val entity = UserDateAndTurnListEntity.create(it.first, it.second)
+                this.copyToRealm(entity)
+            }
+        }
     }
 
-//    fun dates(reverseCount: Int, dayCount: Int) : List<String> {
-//        val today = Date()
-//
-//        val startDateCalendar = Calendar.getInstance()
-//        startDateCalendar.time = today
-//        startDateCalendar.add(Calendar.DATE, -reverseCount)
-//
-//        var startDate = startDateCalendar.time
-//
-//        val endDateCalendar = Calendar.getInstance()
-//        endDateCalendar.time = today
-//        endDateCalendar.add(Calendar.DATE, dayCount)
-//
-//        val endDate = startDateCalendar.time
-//
-//        var dates = mutableListOf<String>()
-//
-//        while (startDate <= endDate) {
-//            val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-//            val aDateString: String = dateFormat.format(startDate)
-//            dates.add(aDateString)
-//
-//            val addingDateCalendar = Calendar.getInstance()
-//            addingDateCalendar.time = startDate
-//            addingDateCalendar.add(Calendar.DATE, 1)
-//            startDate = addingDateCalendar.time
-//        }
-//
-//
-//        val calendar = Calendar.getInstance()
-//        calendar.time = date
-//        calendar.add(Calendar.DATE, -1)
-//        val yesterdayAsString: String = dateFormat.format(calendar.time)
-//
-//    }
+    fun dates(reverseCount: Int, dayCount: Int) : List<String> {
+        val today = Date()
+
+        val startDateCalendar = Calendar.getInstance()
+        startDateCalendar.time = today
+        startDateCalendar.add(Calendar.DATE, -reverseCount)
+
+        var startDate = startDateCalendar.time
+
+        val endDateCalendar = Calendar.getInstance()
+        endDateCalendar.time = today
+        endDateCalendar.add(Calendar.DATE, dayCount)
+
+        val endDate = endDateCalendar.time
+
+        var dates = mutableListOf<String>()
+
+        while (startDate <= endDate) {
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            val aDateString: String = dateFormat.format(startDate)
+            dates.add(aDateString)
+
+            val addingDateCalendar = Calendar.getInstance()
+            addingDateCalendar.time = startDate
+            addingDateCalendar.add(Calendar.DATE, 1)
+            startDate = addingDateCalendar.time
+        }
+        return dates
+    }
+
+//    suspend fun fetchCurrentDiaAndTurnList() :
 
     fun fetchUserDateAndTurnList() : List<UserDateAndTurnListEntity> =
         realm.query<UserDateAndTurnListEntity>().find().map { it }

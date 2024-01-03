@@ -18,7 +18,6 @@ class DiaTableEntity : RealmObject {
     var _id: ObjectId = ObjectId()
     var diaTableType: DiaTableTypeEntity? = null
     var diaItems: RealmList<DiaItemEntity> = realmListOf()
-    //set 인지 list 인지?
 
     companion object {
         fun create(typeName: String,

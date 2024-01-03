@@ -51,6 +51,11 @@ fun WeekViewScreen(close: () -> Unit = {}) {
                 .background(Color.Yellow),
         ) {
             Text(text = "동료이름")
+//            TopAppBar(
+//                elevation = 0.dp,
+//                title = { Text("동료이름") },
+//
+//            )
 
         }
         Column(
@@ -106,9 +111,9 @@ private fun Day(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
-            .clickable { onClick(date) }
+            //.clickable { onClick(date) }
             .border(
-                width = 0.2.dp,
+                width = 0.5.dp,
                 color = Color.LightGray,
                 shape = RectangleShape
             )
@@ -116,31 +121,30 @@ private fun Day(
     ) {
         Column(
             modifier = Modifier
-
-                .padding(vertical = 10.dp),
-
+                .padding(all = 1.dp),
 
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(6.dp),
+            verticalArrangement = Arrangement.spacedBy(2.dp),
         ) {
             Text(
                 text = date.dayOfWeek.displayText(),
-                fontSize = 13.sp,
+                fontSize = 14.sp,
                 color = Color.White,
                 fontWeight = FontWeight.Bold,
             )
             Text(
                 text = dateFormatter.format(date),
-                fontSize = 15.sp,
+                fontSize = 16.sp,
                 color =
                 if (isSelected) colorResource(R.color.example_7_yellow) else
                     Color.White,
                 fontWeight = FontWeight.Bold,
             )
             Column(
-                modifier = Modifier.padding(vertical = 10.dp),
+                modifier = Modifier
+                    .padding(vertical = 10.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(5.dp),)
+                verticalArrangement = Arrangement.spacedBy(4.dp),)
             {
                 Text(
                     text = "사용자",

@@ -43,12 +43,14 @@ import com.sonbum.diacalendar.Screens.AnalysisScreen
 import com.sonbum.diacalendar.Screens.CalendarScreen
 import com.sonbum.diacalendar.Screens.WeekViewScreen
 import com.sonbum.diacalendar.Screens.WorkListScreen
+import com.sonbum.diacalendar.ViewModels.CalendarVM
 import com.sonbum.diacalendar.ViewModels.WorkSettingVM
 import com.sonbum.diacalendar.ui.theme.DiaCalendarTheme
 
 class MainActivity : ComponentActivity() {
 
     val workSettingVM = WorkSettingVM()
+    val calendarVM = CalendarVM()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -64,7 +66,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    MainScreenView(workSettingVM = workSettingVM)
+                    MainScreenView(workSettingVM = workSettingVM, calendarVM = calendarVM)
                 }
             }
         }
@@ -72,13 +74,13 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun MainScreenView(workSettingVM : WorkSettingVM) {
+fun MainScreenView(workSettingVM : WorkSettingVM, calendarVM: CalendarVM) {
     val navController = rememberNavController()
     Scaffold(
         bottomBar = { BottomNavigation(navController = navController) }
     ) {
         Box(Modifier.padding(it)){
-            NavigationGraph(navController = navController, workSettingVM)
+            NavigationGraph(navController = navController, workSettingVM, calendarVM = calendarVM)
         }
     }
 }
@@ -145,10 +147,12 @@ sealed class BottomNavItem(
 
 @Composable
 fun NavigationGraph(navController: NavHostController,
-                    workSettingVM : WorkSettingVM) {
+                    workSettingVM : WorkSettingVM,
+                    calendarVM: CalendarVM
+                    ) {
     NavHost(navController = navController, startDestination = BottomNavItem.Calendar.screenRoute) {
         composable(BottomNavItem.Calendar.screenRoute) {
-            CalendarScreen(workSettingVM = workSettingVM)
+            CalendarScreen(workSettingVM = workSettingVM, calendarVM = calendarVM)
         }
         composable(BottomNavItem.Worklist.screenRoute) {
             WorkListScreen()

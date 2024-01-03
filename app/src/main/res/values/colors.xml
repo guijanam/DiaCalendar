@@ -38,7 +38,7 @@
     <color name="example_5_text_grey_light">#E6C0C0C0</color>
     <color name="outDate_color">#7F9B9B9B</color>
     <color name="dateBack_color">#7FD6D6D6</color>
-    <color name="today_backgroundColor">#80DCDCDC</color>
+    <color name="today_backgroundColor">#80FF9800</color>
     <color name="example_6_month_bg_color">#b2ebf2</color>
     <color name="example_6_month_bg_color2">#F2C4B2</color>
     <color name="example_6_month_bg_color3">#B2B8F2</color>

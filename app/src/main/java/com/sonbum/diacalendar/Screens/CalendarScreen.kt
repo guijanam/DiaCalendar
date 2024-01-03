@@ -69,6 +69,7 @@ import com.kizitonwose.calendar.core.OutDateStyle
 import com.kizitonwose.calendar.core.daysOfWeek
 import com.kizitonwose.calendar.core.yearMonth
 import com.sonbum.diacalendar.R
+import com.sonbum.diacalendar.ViewModels.CalendarVM
 import com.sonbum.diacalendar.ViewModels.WorkSettingVM
 import kotlinx.coroutines.launch
 import java.time.DayOfWeek
@@ -76,7 +77,8 @@ import java.time.LocalDate
 
 @Composable
 fun CalendarScreen(horizontal: Boolean = true,
-                   workSettingVM : WorkSettingVM) {
+                   workSettingVM : WorkSettingVM,
+                   calendarVM: CalendarVM) {
     val today = remember { LocalDate.now() }
     val currentMonth = remember(today) { today.yearMonth }
     val startMonth = remember { currentMonth.minusMonths(500) }
@@ -86,8 +88,10 @@ fun CalendarScreen(horizontal: Boolean = true,
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     var openBottomSheet by remember { mutableStateOf(false) }
-    ModalNavigationDrawer(
 
+//    var userDateAndTurnListEntities = calendarVM.currentUserDateAndTurnList.collectAsState()
+
+    ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
             ModalDrawerSheet {
@@ -117,7 +121,6 @@ fun CalendarScreen(horizontal: Boolean = true,
                 DropdownDiaselect(workSettingVM)
 
                 Divider()
-
             }
         },
     ) {
@@ -151,6 +154,10 @@ fun CalendarScreen(horizontal: Boolean = true,
                         .background(Color.LightGray)//상단 년도 배경색
                         .padding(top = 1.dp),
                 ) {
+
+                    // for test
+//                    Text(text = userDateAndTurnListEntities.value.first().turn)
+
                     val state = rememberCalendarState(
                         startMonth = startMonth,
                         endMonth = endMonth,
@@ -195,8 +202,6 @@ fun CalendarScreen(horizontal: Boolean = true,
                                     isToday = day.position == DayPosition.MonthDate && day.date == today,
                                 ) { clicked ->
 
-
-
 //                                    if (selections.contains(clicked)) {
 //                                        selections.remove(clicked)
 //                                        } else {
@@ -204,8 +209,6 @@ fun CalendarScreen(horizontal: Boolean = true,
 //                                         }
                                         // TODO: - subsheet present
                                         // SubScreen()
-
-
                                 }
                             },
                             // The month body is only needed for ui test tag.
@@ -299,67 +302,67 @@ private fun MonthHeader(daysOfWeek: List<DayOfWeek>) {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun SubScreen(){
-    var openBottomSheet by remember { mutableStateOf(false) }
-
-    Button(onClick = { openBottomSheet = true }) {
-        Text(text = "Here Push")
-    }
-
-    if (openBottomSheet) {
-        ModalBottomSheet(
-            onDismissRequest = { openBottomSheet = false },
-            dragHandle = {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    BottomSheetDefaults.DragHandle()
-                    Text(text = "Comments", style = MaterialTheme.typography.titleLarge)
-                    Spacer(modifier = Modifier.height(10.dp))
-                    Divider()
-                }
-            }
-        ) {
-            SheetContent(
-                onHideButtonClick = {}
-            )
-
-        }
-    }
-
-}
-
-@Composable
-fun SheetContent(
-    onHideButtonClick: () -> Unit
-){
-    Column(
-
-    ) {
-        Row() {
-            Text(text = "1")
-            Text(text = "원래근무")
-        }
-        Row() {
-            Text(text = "출근")
-            Text(text = "09:00")
-        }
-        Row() {
-            Text(text = "전반")
-            Text(text = "09:30-11:00")
-        }
-        Row() {
-            Text(text = "후반")
-            Text(text = "09:30-11:00")
-        }
-
-    }
-
-}
+//@OptIn(ExperimentalMaterial3Api::class)
+//@Composable
+//fun SubScreen(){
+//    var openBottomSheet by remember { mutableStateOf(false) }
+//
+//    Button(onClick = { openBottomSheet = true }) {
+//        Text(text = "Here Push")
+//    }
+//
+//    if (openBottomSheet) {
+//        ModalBottomSheet(
+//            onDismissRequest = { openBottomSheet = false },
+//            dragHandle = {
+//                Column(
+//                    modifier = Modifier
+//                        .fillMaxWidth(),
+//                    horizontalAlignment = Alignment.CenterHorizontally
+//                ) {
+//                    BottomSheetDefaults.DragHandle()
+//                    Text(text = "Comments", style = MaterialTheme.typography.titleLarge)
+//                    Spacer(modifier = Modifier.height(10.dp))
+//                    Divider()
+//                }
+//            }
+//        ) {
+//            SheetContent(
+//                onHideButtonClick = {}
+//            )
+//
+//        }
+//    }
+//
+//}
+//
+//@Composable
+//fun SheetContent(
+//    onHideButtonClick: () -> Unit
+//){
+//    Column(
+//
+//    ) {
+//        Row() {
+//            Text(text = "1")
+//            Text(text = "원래근무")
+//        }
+//        Row() {
+//            Text(text = "출근")
+//            Text(text = "09:00")
+//        }
+//        Row() {
+//            Text(text = "전반")
+//            Text(text = "09:30-11:00")
+//        }
+//        Row() {
+//            Text(text = "후반")
+//            Text(text = "09:30-11:00")
+//        }
+//
+//    }
+//
+//}
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable

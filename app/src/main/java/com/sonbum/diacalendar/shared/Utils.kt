@@ -17,6 +17,11 @@ fun String.makeDate(): Date {
     return formatter.parse(this)
 }
 
+fun Date.getDateString(): String {
+    val formatter = SimpleDateFormat("yyyy/MM/dd")
+    return formatter.format(this)
+}
+
 fun YearMonth.displayText(short: Boolean = false): String {
     return "${this.year}.${this.month.displayText(short = short)}"
 }

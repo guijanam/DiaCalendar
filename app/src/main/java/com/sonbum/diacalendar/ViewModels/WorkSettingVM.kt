@@ -1,6 +1,8 @@
 package com.sonbum.diacalendar.ViewModels
 
 import android.util.Log
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sonbum.diacalendar.DiaCalendarApp
@@ -8,6 +10,7 @@ import com.sonbum.diacalendar.Firebase.Company
 import com.sonbum.diacalendar.Firebase.CompanyListItem
 import com.sonbum.diacalendar.Managers.FirebaseManager
 import com.sonbum.diacalendar.Realm.respository.RealmRepository
+import com.sonbum.diacalendar.shared.getDateString
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -21,6 +24,7 @@ import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.util.Date
 
 class WorkSettingVM : ViewModel() {
 
@@ -52,6 +56,17 @@ class WorkSettingVM : ViewModel() {
     var selectedCompanyName : StateFlow<String> = selectedCompany.map { it?.officeName }.mapNotNull { it }
         .stateIn(scope = viewModelScope, started = SharingStarted.WhileSubscribed(), initialValue = "소속을 선택하세요")
 
+    var selectedDate : MutableStateFlow<Date> = MutableStateFlow(Date())
+
+    var diaTurnList = mutableListOf<String>()
+
+    // date to render calander view
+    var currentDiaAndTurnList : MutableStateFlow<List<Pair<String, String>>> = MutableStateFlow(
+        value = emptyList()
+    )
+
+
+
     companion object {
         const val TAG : String = "WorkSettingVM"
     }
@@ -72,7 +87,14 @@ class WorkSettingVM : ViewModel() {
                 // TODO: dia calculate -> make dia turns
                 // TODO: turn & todayDia store
                 .collectLatest {
-                    Log.d(TAG, ": seletedDia : $it")
+                    val dia = it
+                    val date = selectedDate.value.getDateString()
+
+                    Log.d("Get Date String", ": seletedDia : $dia, selectedDate: $date")
+                    DiaCalendarApp.instance.repository
+                        .updateUserDateAndTurnList(
+                            selectedDate = date,
+                            seletedDia = dia, diaTurnList)
                 }
         }
 
@@ -85,6 +107,7 @@ class WorkSettingVM : ViewModel() {
                     flow<Company> {
                         it.ref?.let {doc ->
                             val fetchedCompany = FirebaseManager.fetchCertainCompanyInfo(doc)
+                            diaTurnList = fetchedCompany.diaTurnList.toMutableList()
                             DiaCalendarApp.instance.repository.updateUserCompany(fetchedCompany)
                             emit(fetchedCompany)
                         }
