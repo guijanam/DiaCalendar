@@ -25,10 +25,13 @@ import androidx.compose.ui.unit.sp
 import com.google.firebase.annotations.concurrent.Background
 import com.kizitonwose.calendar.core.CalendarDay
 import com.kizitonwose.calendar.core.DayPosition
+import com.sonbum.diacalendar.Realm.UserDateAndTurnListEntity
+import java.time.DayOfWeek
 
 @Composable
 fun Day(
     day: CalendarDay,
+    userDateAndTurn: UserDateAndTurnListEntity?,
     isSelected: Boolean,
     colors: List<Color> = emptyList(),
     isToday: Boolean,
@@ -60,12 +63,18 @@ fun Day(
         //contentAlignment = Alignment.TopStart,//날짜 위치
     ) {
         //날짜 토,일 색깔 바꾸기
-        val textColor = when (day.position) {
-            // Color.Unspecified will use the default text color from the current theme
-            DayPosition.MonthDate -> if (isSelected) colorResource(R.color.white) else colorResource(R.color.black)
-            DayPosition.InDate, DayPosition.OutDate -> colorResource(R.color.outDate_color)
+//        val textColor = when (day.position) {
+//            // Color.Unspecified will use the default text color from the current theme
+//            DayPosition.MonthDate -> if (isSelected) colorResource(R.color.white) else colorResource(R.color.black)
+//            DayPosition.InDate, DayPosition.OutDate -> colorResource(R.color.outDate_color)
+//        }
 
+        val textColor = when (day.date.dayOfWeek) {
+            DayOfWeek.SUNDAY -> colorResource(id = R.color.red)
+            DayOfWeek.SATURDAY -> colorResource(id = R.color.blue)
+            else -> colorResource(id = R.color.black)
         }
+
         Row (
             Modifier
                 .fillMaxWidth()
@@ -92,7 +101,7 @@ fun Day(
                 .padding(all = 0.dp),
             horizontalArrangement = Arrangement.Center
         ) {
-            DiaView()
+            DiaView(userDateAndTurn)
         }
 
         Column(
@@ -120,14 +129,25 @@ fun Day(
 }
 
 
-@Composable
-fun DiaView(
 
-) {
+@Composable
+fun DiaView(userDateAndTurn: UserDateAndTurnListEntity?) {
+
+    val turnValue = userDateAndTurn?.turn ?: ""
+
+    val textColor : (String) -> Int = { turn ->
+        if (turn.contains("휴")) {
+            R.color.red
+        }  else if (turn.contains("~")){
+            R.color.gray_off
+        } else {
+            R.color.black
+        }
+    }
 
     Text(
-        text = "Dia",
-        color = Color.Blue,
+        text = userDateAndTurn?.turn ?: "Dia",
+        color = colorResource(id = textColor(turnValue)),
         fontSize = 18.sp
     )
 }

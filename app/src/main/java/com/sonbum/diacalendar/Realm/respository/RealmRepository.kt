@@ -8,7 +8,7 @@ import com.sonbum.diacalendar.Realm.DiaTableEntity
 import com.sonbum.diacalendar.Realm.DiaTableTypeEntity
 import com.sonbum.diacalendar.Realm.UserCompanyEntity
 import com.sonbum.diacalendar.Realm.UserDateAndTurnListEntity
-import com.sonbum.diacalendar.shared.splitAt
+import com.sonbum.diacalendar.shared.getDateString
 import io.realm.kotlin.Realm
 import io.realm.kotlin.RealmConfiguration
 import io.realm.kotlin.ext.query
@@ -19,9 +19,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.temporal.TemporalQueries.localDate
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
+
 
 class RealmRepository(
     private val externalScope : CoroutineScope =
@@ -285,6 +288,19 @@ class RealmRepository(
         val companies = realm.query<UserCompanyEntity>().find()
         return companies.last()
     }
+
+    // userDiaEntity
+//    fun findUserDiaAndTurn(date: LocalDate) : UserDateAndTurnListEntity? {
+//
+//        val dateString : String = SimpleDateFormat("yyyy-MM-dd").format(date)
+//
+//
+//        val result = realm.query<UserDateAndTurnListEntity>("_calendarData == $0", dateString).first().find()
+//
+//        return result
+//    }
+
+
 }
 
 

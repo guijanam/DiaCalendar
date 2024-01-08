@@ -48,8 +48,9 @@
     <color name="green_700">#388E3C</color>
     <color name="teal_700">#00796B</color>
     <color name="pink_700">#C2185B</color>
-    <color name="red_800">#c62828</color>
-    <color name="blue_800">#1565C0</color>
+    <color name="red">#FF0000</color>
+    <color name="blue">#0077FF</color>
+    <color name="gray_off">#86828282</color>
     <color name="cyan_700">#0097A7</color>
     <color name="example_6_black">#BF000000</color>
     <color name="example_7_white">#D9FFFFFF</color>

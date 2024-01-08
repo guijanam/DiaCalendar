@@ -36,6 +36,7 @@ import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.rememberDrawerState
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
@@ -69,12 +70,14 @@ import com.kizitonwose.calendar.core.OutDateStyle
 import com.kizitonwose.calendar.core.daysOfWeek
 import com.kizitonwose.calendar.core.yearMonth
 import com.sonbum.diacalendar.R
+import com.sonbum.diacalendar.Realm.UserDateAndTurnListEntity
 import com.sonbum.diacalendar.ViewModels.CalendarVM
 import com.sonbum.diacalendar.ViewModels.WorkSettingVM
 import kotlinx.coroutines.launch
 import java.time.DayOfWeek
 import java.time.LocalDate
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CalendarScreen(horizontal: Boolean = true,
                    workSettingVM : WorkSettingVM,
@@ -87,9 +90,12 @@ fun CalendarScreen(horizontal: Boolean = true,
     val daysOfWeek = remember { daysOfWeek() }
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     var openBottomSheet by remember { mutableStateOf(false) }
 
-//    var userDateAndTurnListEntities = calendarVM.currentUserDateAndTurnList.collectAsState()
+    var selectedUserDateAndTurn by remember { mutableStateOf<UserDateAndTurnListEntity?>(null) }
+
+    var userDateAndTurnListEntities = calendarVM.currentUserDateAndTurnList.collectAsState()
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -105,13 +111,6 @@ fun CalendarScreen(horizontal: Boolean = true,
                     modifier = Modifier
                         .padding(16.dp)
                 )
-
-//                NavigationDrawerItem(
-//                    label = { Text(text = "승무소를 선택하세요") },
-//                    selected = false,
-//                    onClick = { /*TODO*/ }
-//                )
-
                 DropdownCompany(workSettingVM)
                 Divider()
                 Text("오늘근무 선택",
@@ -125,28 +124,12 @@ fun CalendarScreen(horizontal: Boolean = true,
         },
     ) {
         Scaffold(
-
-//            floatingActionButton = {
-//                ExtendedFloatingActionButton(
-//                    text = { Text("") },
-//                    icon = { Icon(Icons.Filled.Add, contentDescription = "") },
-//                    onClick = {
-//                        scope.launch {
-//                            drawerState.apply {
-//                                if (isClosed) open() else close()
-//                            }
-//                        }
-//                    }
-//                )
-//            }
-
         ) { contentPadding ->
             // Screen content
             Surface(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(contentPadding)
-
             ) {
                 Column(
                     modifier = Modifier
@@ -155,8 +138,8 @@ fun CalendarScreen(horizontal: Boolean = true,
                         .padding(top = 1.dp),
                 ) {
 
-                    // for test
-//                    Text(text = userDateAndTurnListEntities.value.first().turn)
+                     //for test
+                    Text(text = "count: ${userDateAndTurnListEntities.value.count()}")
 
                     val state = rememberCalendarState(
                         startMonth = startMonth,
@@ -196,12 +179,19 @@ fun CalendarScreen(horizontal: Boolean = true,
                             state = state,
                             horizontal = horizontal,
                             dayContent = { day ->
+
+                                //day.date
+
+                                val currentUserDateAndTurn = calendarVM.findUserDateAndTurn(day.date)
+
                                 Day(
                                     day = day,
+                                    userDateAndTurn = currentUserDateAndTurn,
                                     isSelected = selections.contains(day),
                                     isToday = day.position == DayPosition.MonthDate && day.date == today,
                                 ) { clicked ->
-
+//                                    openBottomSheet = true
+                                    selectedUserDateAndTurn = currentUserDateAndTurn
 //                                    if (selections.contains(clicked)) {
 //                                        selections.remove(clicked)
 //                                        } else {
@@ -226,6 +216,28 @@ fun CalendarScreen(horizontal: Boolean = true,
                             },
 
                             )
+                    }
+                }
+            }
+            if(selectedUserDateAndTurn != null) {
+                ModalBottomSheet(onDismissRequest = {
+//                    openBottomSheet = false
+                    selectedUserDateAndTurn = null
+                }, sheetState = sheetState) {
+                    //
+                    selectedUserDateAndTurn?.let {
+                        SubScreen(it)
+                    }
+
+                    Button(onClick = {
+                        scope.launch { sheetState.hide() }.invokeOnCompletion {
+                            if (!sheetState.isVisible) {
+//                                openBottomSheet = false
+                                selectedUserDateAndTurn = null
+                            }
+                        }
+                    }) {
+                        Text(text = "hide bottom sheet")
                     }
                 }
             }

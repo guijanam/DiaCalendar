@@ -13,8 +13,13 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.Date
 import java.util.concurrent.Flow
 
 class CalendarVM : ViewModel() {
@@ -26,7 +31,7 @@ class CalendarVM : ViewModel() {
     private val currentUserDateAndTurnListEntityFlow = DiaCalendarApp.instance.repository
         .realm.query<UserDateAndTurnListEntity>().asFlow()
 
-//    var currentUserDateAndTurnList : MutableStateFlow<List<UserDateAndTurnListEntity>> = MutableStateFlow(value = emptyList())
+    var currentUserDateAndTurnList : MutableStateFlow<List<UserDateAndTurnListEntity>> = MutableStateFlow(value = emptyList())
 
 //    val wordFlow = MutableStateFlow("Hi")
 //    val pointFlow = MutableStateFlow(5)
@@ -41,26 +46,36 @@ class CalendarVM : ViewModel() {
         viewModelScope.launch {
             val asyncCall: Deferred<Unit> = async {
                 currentUserDateAndTurnListEntityFlow
-//                    .map { it.list.toList() }
-//                    .collect(currentUserDateAndTurnList)
+                    .map { it.list.toList() }
+                    .collect(currentUserDateAndTurnList)
 
-                    .collect { results ->
-                        when (results) {
-                            // print out initial results
-                            is InitialResults<UserDateAndTurnListEntity> -> {
-                                for (anUserDateAndTurnList in results.list) {
-                                    Log.d(TAG, "initial: anUserDateAndTurnList: $anUserDateAndTurnList")
-                                }
-                            } else -> {
-                            // do nothing on changes
-                                for (anUserDateAndTurnList in results.list) {
-                                    Log.d(TAG, "changed: anUserDateAndTurnList: $anUserDateAndTurnList")
-                                }
-                            }
-                        }
-                }
+//                    .collect { results ->
+//                        when (results) {
+//                            // print out initial results
+//                            is InitialResults<UserDateAndTurnListEntity> -> {
+//                                for (anUserDateAndTurnList in results.list) {
+//                                    Log.d(TAG, "initial: anUserDateAndTurnList: $anUserDateAndTurnList")
+//                                }
+//                            } else -> {
+//                            // do nothing on changes
+//                                for (anUserDateAndTurnList in results.list) {
+//                                    Log.d(TAG, "changed: anUserDateAndTurnList: $anUserDateAndTurnList")
+//                                }
+//                            }
+//                        }
+//                }
             }
         }
     }
+
+    fun findUserDateAndTurn(date: LocalDate) : UserDateAndTurnListEntity? {
+        //val dateString : String = SimpleDateFormat("yyyy-MM-dd").format
+        val dateString = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+        Log.d(TAG, "findUserDateAndTurn: dateString : $dateString")
+        return currentUserDateAndTurnList.value.firstOrNull {
+            it._calendarData == dateString
+        }
+    }
+
 
 }

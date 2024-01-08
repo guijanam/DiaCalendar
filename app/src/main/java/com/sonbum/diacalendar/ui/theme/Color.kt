@@ -19,3 +19,6 @@ val OneVarient = Color(0xFFA27676)
 val Two = Color(0xFFFFD9C0)
 val Three = Color(0xFFFAF0D7)
 val Four = Color(0xFF8CC0DE)
+
+val color1 = Color(0xFF642B73)
+val color2 = Color(0xFFC6426E)
