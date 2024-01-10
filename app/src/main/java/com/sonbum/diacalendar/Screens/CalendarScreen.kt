@@ -1,5 +1,6 @@
 package com.sonbum.diacalendar.Screens
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
@@ -20,9 +21,7 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.darkColors
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.BottomSheetDefaults
+
 import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DrawerValue
@@ -51,6 +50,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -90,33 +90,44 @@ fun CalendarScreen(horizontal: Boolean = true,
     val daysOfWeek = remember { daysOfWeek() }
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
-    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-    var openBottomSheet by remember { mutableStateOf(false) }
-
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
+    //var openBottomSheet by remember { mutableStateOf(false) }
     var selectedUserDateAndTurn by remember { mutableStateOf<UserDateAndTurnListEntity?>(null) }
-
     var userDateAndTurnListEntities = calendarVM.currentUserDateAndTurnList.collectAsState()
 
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
-            ModalDrawerSheet {
+            ModalDrawerSheet(
+
+            )
+            {
                 Text("사용자 설정",
                     modifier = Modifier
-                        .padding(16.dp)
+                        .padding(10.dp),
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 25.sp
                 )
 
                 Divider()
-                Text("소속 선택",
+
+                Text("승무소",
                     modifier = Modifier
-                        .padding(16.dp)
+                        .padding(15.dp),
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 20.sp
                 )
                 DropdownCompany(workSettingVM)
+
                 Divider()
-                Text("오늘근무 선택",
+
+                Text("오늘근무",
                     modifier = Modifier
-                        .padding(16.dp)
+                        .padding(15.dp),
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 20.sp
                 )
+
                 DropdownDiaselect(workSettingVM)
 
                 Divider()
@@ -138,8 +149,8 @@ fun CalendarScreen(horizontal: Boolean = true,
                         .padding(top = 1.dp),
                 ) {
 
-                     //for test
-                    Text(text = "count: ${userDateAndTurnListEntities.value.count()}")
+                    // TODO: - 여기가 실행되어야만 다이아가 보임
+                    userDateAndTurnListEntities.value.count()
 
                     val state = rememberCalendarState(
                         startMonth = startMonth,
@@ -192,13 +203,7 @@ fun CalendarScreen(horizontal: Boolean = true,
                                 ) { clicked ->
 //                                    openBottomSheet = true
                                     selectedUserDateAndTurn = currentUserDateAndTurn
-//                                    if (selections.contains(clicked)) {
-//                                        selections.remove(clicked)
-//                                        } else {
-//                                        selections.add(clicked)
-//                                         }
-                                        // TODO: - subsheet present
-                                        // SubScreen()
+
                                 }
                             },
                             // The month body is only needed for ui test tag.
@@ -220,11 +225,16 @@ fun CalendarScreen(horizontal: Boolean = true,
                 }
             }
             if(selectedUserDateAndTurn != null) {
-                ModalBottomSheet(onDismissRequest = {
-//                    openBottomSheet = false
-                    selectedUserDateAndTurn = null
-                }, sheetState = sheetState) {
-                    //
+                ModalBottomSheet(
+                    modifier = Modifier,
+                    tonalElevation = 10.dp,
+                    onDismissRequest = {
+                    selectedUserDateAndTurn = null},
+
+
+                    sheetState = sheetState
+                ) {
+
                     selectedUserDateAndTurn?.let {
                         SubScreen(it)
                     }
@@ -232,12 +242,11 @@ fun CalendarScreen(horizontal: Boolean = true,
                     Button(onClick = {
                         scope.launch { sheetState.hide() }.invokeOnCompletion {
                             if (!sheetState.isVisible) {
-//                                openBottomSheet = false
                                 selectedUserDateAndTurn = null
                             }
                         }
                     }) {
-                        Text(text = "hide bottom sheet")
+
                     }
                 }
             }
@@ -290,17 +299,6 @@ private fun MonthHeader(daysOfWeek: List<DayOfWeek>) {
             .background(colorResource(id = R.color.example_1_bg_secondary))
             .padding(all = 1.dp),
     ) {
-        //여기에 요일 색깔
-//        val textColor = when (day.position) {
-//            // Color.Unspecified will use the default text color from the current theme
-//            DayPosition.MonthDate -> if (isSelected) colorResource(R.color.white) else colorResource(R.color.black)
-//            DayPosition.InDate, DayPosition.OutDate -> colorResource(R.color.example_5_text_grey_light)
-//
-//        }
-//        val textColor = when (daysOfWeek.first()) {
-//
-//            else -> {}
-//        }
 
         for (dayOfWeek in daysOfWeek) {
             Text(
@@ -314,67 +312,6 @@ private fun MonthHeader(daysOfWeek: List<DayOfWeek>) {
     }
 }
 
-//@OptIn(ExperimentalMaterial3Api::class)
-//@Composable
-//fun SubScreen(){
-//    var openBottomSheet by remember { mutableStateOf(false) }
-//
-//    Button(onClick = { openBottomSheet = true }) {
-//        Text(text = "Here Push")
-//    }
-//
-//    if (openBottomSheet) {
-//        ModalBottomSheet(
-//            onDismissRequest = { openBottomSheet = false },
-//            dragHandle = {
-//                Column(
-//                    modifier = Modifier
-//                        .fillMaxWidth(),
-//                    horizontalAlignment = Alignment.CenterHorizontally
-//                ) {
-//                    BottomSheetDefaults.DragHandle()
-//                    Text(text = "Comments", style = MaterialTheme.typography.titleLarge)
-//                    Spacer(modifier = Modifier.height(10.dp))
-//                    Divider()
-//                }
-//            }
-//        ) {
-//            SheetContent(
-//                onHideButtonClick = {}
-//            )
-//
-//        }
-//    }
-//
-//}
-//
-//@Composable
-//fun SheetContent(
-//    onHideButtonClick: () -> Unit
-//){
-//    Column(
-//
-//    ) {
-//        Row() {
-//            Text(text = "1")
-//            Text(text = "원래근무")
-//        }
-//        Row() {
-//            Text(text = "출근")
-//            Text(text = "09:00")
-//        }
-//        Row() {
-//            Text(text = "전반")
-//            Text(text = "09:30-11:00")
-//        }
-//        Row() {
-//            Text(text = "후반")
-//            Text(text = "09:30-11:00")
-//        }
-//
-//    }
-//
-//}
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -385,8 +322,6 @@ fun DropdownCompany(workSettingVM: WorkSettingVM) {
     var expanded by remember { mutableStateOf(false) }
 
     val selectedOptionText = workSettingVM.selectedCompanyName.collectAsState()
-
-    //val coroutineScope = rememberCoroutineScope()
 
     ExposedDropdownMenuBox(
         expanded = expanded ,

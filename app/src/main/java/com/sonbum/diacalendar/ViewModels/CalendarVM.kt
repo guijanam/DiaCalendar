@@ -33,13 +33,6 @@ class CalendarVM : ViewModel() {
 
     var currentUserDateAndTurnList : MutableStateFlow<List<UserDateAndTurnListEntity>> = MutableStateFlow(value = emptyList())
 
-//    val wordFlow = MutableStateFlow("Hi")
-//    val pointFlow = MutableStateFlow(5)
-//
-//    val stateString = wordFlow.combine(pointFlow) { word, points ->
-//        "$word is worth $points points"
-//    }.stateIn(viewModelScope, SharingStarted.Eagerly, "Default is worth 0 points")
-
     init {
         Log.d(TAG, ": init")
 
@@ -49,21 +42,6 @@ class CalendarVM : ViewModel() {
                     .map { it.list.toList() }
                     .collect(currentUserDateAndTurnList)
 
-//                    .collect { results ->
-//                        when (results) {
-//                            // print out initial results
-//                            is InitialResults<UserDateAndTurnListEntity> -> {
-//                                for (anUserDateAndTurnList in results.list) {
-//                                    Log.d(TAG, "initial: anUserDateAndTurnList: $anUserDateAndTurnList")
-//                                }
-//                            } else -> {
-//                            // do nothing on changes
-//                                for (anUserDateAndTurnList in results.list) {
-//                                    Log.d(TAG, "changed: anUserDateAndTurnList: $anUserDateAndTurnList")
-//                                }
-//                            }
-//                        }
-//                }
             }
         }
     }

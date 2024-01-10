@@ -61,9 +61,9 @@ class WorkSettingVM : ViewModel() {
     var diaTurnList = mutableListOf<String>()
 
     // date to render calander view
-    var currentDiaAndTurnList : MutableStateFlow<List<Pair<String, String>>> = MutableStateFlow(
-        value = emptyList()
-    )
+//    var currentDiaAndTurnList : MutableStateFlow<List<Pair<String, String>>> = MutableStateFlow(
+//        value = emptyList()
+//    )
 
 
 

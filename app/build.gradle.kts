@@ -63,6 +63,7 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:32.6.0"))
     implementation("com.google.firebase:firebase-firestore")
 
+
     implementation("io.realm.kotlin:library-base:1.12.0")
     implementation("io.realm.kotlin:library-sync:1.12.0")// If using Device Sync
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")// If using coroutines with the SDK

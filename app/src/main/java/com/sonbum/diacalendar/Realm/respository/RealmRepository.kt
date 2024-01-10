@@ -52,7 +52,7 @@ class RealmRepository(
         ).build()
         // Open the realm with the configuration object
         this.realm = Realm.open(config)
-        Log.d(TAG, "Successfully opened realm: ${realm.configuration.name}")
+        //Log.d(TAG, "Successfully opened realm: ${realm.configuration.name}")
         externalScope.launch {
             this@RealmRepository.createDiaTableTypes()
         }
@@ -116,7 +116,6 @@ class RealmRepository(
             val existingDiaTableEntities = realm.query<DiaTableEntity>().find()
             delete(existingDiaTableEntities)
 
-            // TODO: DiaItemEntiy 안지워지고 계속 추가됨
             val existingDiaItemEntities = realm.query<DiaItemEntity>().find()
             delete(existingDiaItemEntities)
 
@@ -125,10 +124,6 @@ class RealmRepository(
 
             val existingUserDateAndTurnListEntities = realm.query<UserDateAndTurnListEntity>().find()
             delete(existingUserDateAndTurnListEntities)
-
-//            val existingUserEntities = realm.query<UserEntity>().find()
-//            delete(existingUserEntities)
-
 
 
             // create new
@@ -139,12 +134,6 @@ class RealmRepository(
             val diaSelectList = fetchedCompany.diaSelectedList
             userCompany.diaSelect = diaSelectList.toRealmList()
 
-//            val diaTableEntities = fetchedCompany.diaTables.map {
-//                DiaTableEntity(typeName = it.key, diaWorkDetails = it.value.diaWorkDetails.values.toList())
-//            }
-
-//            userCompany.diaTables = diaTableEntities.toRealmSet()
-//            copyToRealm(userCompany)
         }
     }
 
@@ -212,8 +201,8 @@ class RealmRepository(
     )
     {
         val todayDia = seletedDia
-        val multiplyCount = 11
-        val leftCycleCount = (multiplyCount - 1) / 2
+        val multiplyCount = 12
+        val leftCycleCount = 3
         val tripleDiaTurnList = List(multiplyCount) { turnList }.flatten()
 
         val foundIndex = turnList.indexOfFirst { it == todayDia }
@@ -225,13 +214,13 @@ class RealmRepository(
             .withIndex()
             .partition { it.index <= centerIndex }
 
-        Log.d(TAG, "updateUserDateAndTurnList: ")
+        //Log.d(TAG, "updateUserDateAndTurnList: ")
         val dateArray = this.dates(trimedTurnListLeft.count()
             , dayCount = tripleDiaTurnList.count())
 
         val dateAndTurnList : List<Pair<String, String>> = dateArray.zip(tripleDiaTurnList)
 
-        Log.d(TAG, "dateAndTurnList.size: ${dateAndTurnList.size}")
+        //Log.d(TAG, "dateAndTurnList.size: ${dateAndTurnList.size}")
         realm.write {
             // 1. delete existing
             this.delete(query<UserDateAndTurnListEntity>().find())
@@ -275,31 +264,19 @@ class RealmRepository(
     }
 
 //    suspend fun fetchCurrentDiaAndTurnList() :
-
-    fun fetchUserDateAndTurnList() : List<UserDateAndTurnListEntity> =
-        realm.query<UserDateAndTurnListEntity>().find().map { it }
-
-    fun fetchCurrentUserCompannyDiaTurnList(): List<String> {
-        val companies = realm.query<UserCompanyEntity>().find()
-        val currentcompany = companies.last()
-        return currentcompany.diaTurn
-    }
-    fun fetchCurrentUserCompany(): UserCompanyEntity {
-        val companies = realm.query<UserCompanyEntity>().find()
-        return companies.last()
-    }
-
-    // userDiaEntity
-//    fun findUserDiaAndTurn(date: LocalDate) : UserDateAndTurnListEntity? {
 //
-//        val dateString : String = SimpleDateFormat("yyyy-MM-dd").format(date)
+//    fun fetchUserDateAndTurnList() : List<UserDateAndTurnListEntity> =
+//        realm.query<UserDateAndTurnListEntity>().find().map { it }
 //
-//
-//        val result = realm.query<UserDateAndTurnListEntity>("_calendarData == $0", dateString).first().find()
-//
-//        return result
+//    fun fetchCurrentUserCompannyDiaTurnList(): List<String> {
+//        val companies = realm.query<UserCompanyEntity>().find()
+//        val currentcompany = companies.last()
+//        return currentcompany.diaTurn
 //    }
-
+//    fun fetchCurrentUserCompany(): UserCompanyEntity {
+//        val companies = realm.query<UserCompanyEntity>().find()
+//        return companies.last()
+//    }
 
 }
 

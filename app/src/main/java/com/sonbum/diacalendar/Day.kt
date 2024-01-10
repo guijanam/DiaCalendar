@@ -4,8 +4,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+
+
 import androidx.compose.foundation.layout.Column
+
 import androidx.compose.foundation.layout.Row
+
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,6 +24,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.firebase.annotations.concurrent.Background
@@ -33,7 +38,6 @@ fun Day(
     day: CalendarDay,
     userDateAndTurn: UserDateAndTurnListEntity?,
     isSelected: Boolean,
-    colors: List<Color> = emptyList(),
     isToday: Boolean,
     onClick: (CalendarDay) -> Unit,
 ) {
@@ -42,17 +46,18 @@ fun Day(
             .fillMaxWidth()
             .fillMaxHeight()
             .border(
-                width = 0.3.dp,
+                width = 0.2.dp,
                 color = colorResource(R.color.calendarBorder_color),
                 shape = RectangleShape
             )
             .padding(all = 0.dp)
             .background(
-                color = when {
-                    isSelected -> colorResource(R.color.example_1_selection_color)
-                    isToday -> colorResource(id = R.color.today_backgroundColor)
-                    else -> Color.Transparent
-                },
+                color = Color.Transparent,
+//                when {
+//                    isSelected -> colorResource(R.color.example_1_selection_color)
+//                    isToday -> colorResource(id = R.color.today_backgroundColor)
+//                    else -> Color.Transparent
+//                },
             )
             // Disable clicks on inDates/outDates
             .clickable(
@@ -60,71 +65,62 @@ fun Day(
                 showRipple = !isSelected,
                 onClick = { onClick(day) },
             ),
-        //contentAlignment = Alignment.TopStart,//날짜 위치
+        verticalArrangement = Arrangement.Top,//날짜 위치
     ) {
-        //날짜 토,일 색깔 바꾸기
-//        val textColor = when (day.position) {
-//            // Color.Unspecified will use the default text color from the current theme
-//            DayPosition.MonthDate -> if (isSelected) colorResource(R.color.white) else colorResource(R.color.black)
-//            DayPosition.InDate, DayPosition.OutDate -> colorResource(R.color.outDate_color)
-//        }
+
 
         val textColor = when (day.date.dayOfWeek) {
             DayOfWeek.SUNDAY -> colorResource(id = R.color.red)
             DayOfWeek.SATURDAY -> colorResource(id = R.color.blue)
             else -> colorResource(id = R.color.black)
         }
+        if (day.position == DayPosition.MonthDate) {
 
-        Row (
-            Modifier
-                .fillMaxWidth()
-                .padding(all = 0.dp)
-                .background(colorResource(R.color.dateBack_color))
-        )
-        {
-            //날짜
-            Text(
-                text = day.date.dayOfMonth.toString(),
-                color = textColor,
-                fontSize = 15.sp,
+            Row (
+                Modifier
+                    .fillMaxWidth()
+                    .padding(all = 0.dp)
+                    .background(
+                        color = when {
+                            isToday -> colorResource(id = R.color.today_backgroundColor)
+                            else -> colorResource(id = R.color.dateBack_color)
+                        },
+                        )
             )
+            {
+                //날짜
+                Text(
+                    text = day.date.dayOfMonth.toString(),
+                    color = textColor,
+                    fontSize = 14.sp,
+                )
 
-            Text(
-                text = "공휴일",
-                color = Color.Red,
-                fontSize = 10.sp,
-            )
-        }
-        Row(
-            Modifier
-                .fillMaxWidth()
-                .padding(all = 0.dp),
-            horizontalArrangement = Arrangement.Center
-        ) {
-            DiaView(userDateAndTurn)
-        }
-
-        Column(
-            Modifier
-                .fillMaxWidth()
-                .padding(all = 0.dp),
-            horizontalAlignment = Alignment.Start,
-        ) {
-//            for (color in colors) {
-//                Box(
-//                    Modifier
-//                        .fillMaxWidth()
-//                        .height(5.dp)
-//                        .background(color),
+//                Text(
+//                    text = "공휴일",
+//                    color = Color.Red,
+//                    fontSize = 10.sp,
 //                )
-//            }
+            }
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(22.dp)
+                    .padding(top = 1.dp, end = 0.dp),
+                    //.background(Color.Yellow),
+                contentAlignment = Alignment.TopCenter
 
-            Text(
-                text = "구글연동",
-                color = Color.Black,
-            )
-            MemoView()
+            ) {
+                DiaView(userDateAndTurn)
+            }
+
+//            Text(
+//                text = "구글연동",
+//                color = Color.Black,
+//            )
+//            MemoView()
+
         }
+
     }
 }
 
@@ -146,9 +142,11 @@ fun DiaView(userDateAndTurn: UserDateAndTurnListEntity?) {
     }
 
     Text(
-        text = userDateAndTurn?.turn ?: "Dia",
+        text = turnValue,
         color = colorResource(id = textColor(turnValue)),
-        fontSize = 18.sp
+        fontSize = 16.sp,
+        fontWeight = FontWeight.Bold,
+
     )
 }
 
